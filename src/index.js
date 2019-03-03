@@ -58,6 +58,10 @@ class Board extends React.Component {
       <div>
         <div className="status">{status}</div>
         {rows}
+        <input type="button" onClick={() => this.setState({
+          squares: Array(this.cols * this.cols).fill(null),
+          xIsNext: true,
+        })} value="Restart game" />
       </div>
     );
   }
@@ -86,20 +90,20 @@ function calculateWinner(squares, cols) {
     if (!mark) continue;
 
     let startOfRow = (i === 0 || (i % cols) === 0);
-    let fitsInRow = startOfRow || ((i + 1) % cols !== 0 && (i + 2) % cols !== 0);
-    let fitsInCol = i + cols * 2 <= squares.length;
-    let fitsInDownDiagonal = i + cols * 2 + 2 <= squares.length;
-    let fitsInUpDiagonal = i + cols * 2 - 2 <= squares.length;
-    if (fitsInRow && squares[i + 1] === mark && squares[i + 2] === mark) {
+    let fitsInRow = startOfRow || ((i + 1) % cols !== 0 && (i + 2) % cols !== 0 && (i + 3) % cols !== 0);
+    let fitsInCol = i + cols * 3 <= squares.length;
+    let fitsInDownDiagonal = i + cols * 3 + 3 <= squares.length;
+    let fitsInUpDiagonal = i + cols * 3 - 3 <= squares.length;
+    if (fitsInRow && squares[i + 1] === mark && squares[i + 2] === mark && squares[i + 3] === mark) {
       return mark;
     }
-    if (fitsInCol && squares[i + cols] === mark && squares[i + cols * 2] === mark) {
+    if (fitsInCol && squares[i + cols] === mark && squares[i + cols * 2] === mark && squares[i + cols * 3] === mark) {
       return mark;
     }
-    if (fitsInDownDiagonal && squares[i + cols + 1] === mark && squares[i + cols * 2 + 2] === mark) {
+    if (fitsInDownDiagonal && squares[i + cols + 1] === mark && squares[i + cols * 2 + 2] === mark && squares[i + cols * 3 + 3] === mark) {
       return mark;
     }
-    if (fitsInUpDiagonal && squares[i + cols - 1] === mark && squares[i + cols * 2 - 2] === mark) {
+    if (fitsInUpDiagonal && squares[i + cols - 1] === mark && squares[i + cols * 2 - 2] === mark && squares[i + cols * 3 - 3] === mark) {
       return mark;
     }
   }
@@ -113,3 +117,4 @@ ReactDOM.render(
   <Game />,
   document.getElementById('root')
 );
+
