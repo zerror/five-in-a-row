@@ -4,7 +4,7 @@ import './index.css';
 
 function Square(props) {
   return (
-    <button className="square" onClick={props.onClick}>
+  	<button className={props.value ? "square " + props.value : "square"} onClick={props.onClick}>
       {props.value}
     </button>
   );
