@@ -2,6 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import {calculateWinner} from './functions';
+import { addLocaleData, IntlProvider, FormattedMessage } from 'react-intl';
+
+import fiMessages from './locale/fi.json';
+
+let locale = "fi";
+let localeData = require('react-intl/locale-data/' + locale);
+let allMessages = { "fi": fiMessages };
+let messages = allMessages[locale] ? allMessages[locale] : {};
+addLocaleData(localeData);
+
 
 function Square(props) {
   return (
@@ -39,7 +49,8 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.cols = 15;
-    this.mode = 'practice';
+    this.mode = 0;
+    this.modes = [<FormattedMessage id="game.practice" defaultMessage="practice" />];
     this.state = {
       history: [{
         squares: Array(this.cols * this.cols).fill(null),
@@ -74,17 +85,24 @@ class Game extends React.Component {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares, this.cols);
-    let status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-	  if (winner) {
-			status = <strong>{'Winner: ' + winner}</strong>;
+
+    let status = <FormattedMessage id="game.next_player" defaultMessage="Next player: {player}" values={{
+      player: (this.state.xIsNext ? 'X' : 'O') }}/>;
+
+    if (winner) {
+      status = <strong><FormattedMessage id="game.winner" defaultMessage="Winner: {player}" values={{
+        player: winner }}/></strong>;
     }
 
-		let steps = (this.mode === 'practice' ? 1 : 2);
+		let steps = (this.mode === 0 ? 1 : 2);
     let undoDisabled = (this.state.stepNumber - steps < 0 ? 'disabled' : '');
     let redoDisabled = (this.state.stepNumber >= history.length - steps ? 'disabled' : '');
+
     const moves = <div>
-      <button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - steps)}>Undo</button>
-      <button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + steps)}>Redo</button>
+      <button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - steps)}>
+        <FormattedMessage id="game.undo" defaultMessage="Undo" /></button>
+      <button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + steps)}>
+        <FormattedMessage id="game.redo" defaultMessage="Redo" /></button>
     </div>;
 
     return (
@@ -99,11 +117,13 @@ class Game extends React.Component {
             {moves}
           </div>
         </div>
-        <input className="reset-button" type="button" onClick={() => this.setState({
-          history: [{ squares: Array(this.cols * this.cols).fill(null) }],
-          stepNumber: 0,
-        })} value="Practice game" />
-				<div>Mode: {this.mode}</div>
+
+        <FormattedMessage id="game.practice_game" defaultMessage="Practice game">
+          {text => <input className="reset-button" type="button" onClick={() => this.setState({
+          history: [{ squares: Array(this.cols * this.cols).fill(null) }], stepNumber: 0, })} value={text} />}
+        </FormattedMessage>
+
+        <div><FormattedMessage id="game.mode" defaultMessage="Mode" />: {this.modes[this.mode]}</div>
       </div>
     );
   }
@@ -112,7 +132,9 @@ class Game extends React.Component {
 // ========================================
 
 ReactDOM.render(
-  <Game />,
+  <IntlProvider locale={locale} messages={messages} >
+    <Game />
+  </IntlProvider>,
   document.getElementById('root')
 );
 

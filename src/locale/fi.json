@@ -1,0 +1,9 @@
+{
+  "game.mode": "Pelimuoto",
+  "game.undo": "edellinen",
+  "game.redo": "seuraava",
+  "game.practice": "harjoitus",
+  "game.practice_game": "Harjoituspeli",
+  "game.next_player": "Seuraava pelaaja: {player}",
+  "game.winner": "Voittaja: {player}"
+}

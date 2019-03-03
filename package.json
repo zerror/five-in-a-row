@@ -9,7 +9,9 @@
     "eslint-plugin-react": "^7.11.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts": "^2.1.5"
+    "react-intl": "^2.8.0",
+    "react-scripts": "^2.1.5",
+    "typescript": "^3.3.3333"
   },
   "scripts": {
     "start": "react-scripts start",
