@@ -31,6 +31,8 @@ ol, ul {
   text-align: center;
   width: 34px;
 }
+.board-row:nth-of-type(even) .square:nth-child(odd) {background: #f6f6f6}
+.board-row:nth-of-type(odd) .square:nth-child(even) {background: #f6f6f6}
 
 .square.O {
   color:red;
