@@ -13,6 +13,15 @@ let messages = allMessages[locale] ? allMessages[locale] : {};
 addLocaleData(localeData);
 
 
+const DocumentTitle = () => (
+	<FormattedMessage id='page.title' defaultMessage='5-in-a-row'>
+    {(message) => {
+      document.title = message;
+      return null
+    }}
+	</FormattedMessage>
+);
+
 function Square(props) {
   return (
   	<button className={props.value ? "square " + props.value : "square"} onClick={props.onClick}>
@@ -27,7 +36,6 @@ class Board extends React.Component {
   }
 
   render() {
-
     var rows = [];
 	  for (let i = 0; i < this.props.cols; i++) {
 	    let cells = []
@@ -107,6 +115,7 @@ class Game extends React.Component {
 
     return (
       <div>
+        <DocumentTitle />
         <div className="game">
           <div className="game-board">
             <Board squares={current.squares} cols={this.cols} onClick={(i) => this.handleClick(i)}/>
