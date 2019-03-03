@@ -43,11 +43,12 @@ class Game extends React.Component {
         squares: Array(this.cols * this.cols).fill(null),
       }],
       xIsNext: true,
+      stepNumber: 0,
     };
   }
 
   handleClick(i) {
-    const history = this.state.history;
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
     if (calculateWinner(squares, this.cols) || squares[i]) {
@@ -57,12 +58,20 @@ class Game extends React.Component {
     this.setState({
       history: history.concat([{ squares: squares, }]),
       xIsNext: !this.state.xIsNext,
+      stepNumber: history.length,
+    });
+  }
+
+  jumpTo(step) {
+    this.setState({
+      stepNumber: step,
+      xIsNext: this.state.xIsNext,
     });
   }
 
   render() {
     const history = this.state.history;
-    const current = history[history.length - 1];
+    const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares, this.cols);
     let status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
 	  if (winner) {
@@ -70,6 +79,13 @@ class Game extends React.Component {
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
+
+    let undoDisabled = (this.state.stepNumber - 1 < 0 ? 'disabled' : '');
+    let redoDisabled = (this.state.stepNumber >= history.length - 1? 'disabled' : '');
+    const moves = <div>
+      <button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - 1)}>Undo</button>
+      <button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + 1)}>Redo</button>
+    </div>;
 
     return (
       <div>
@@ -80,12 +96,13 @@ class Game extends React.Component {
 
           <div className="game-info">
             <div className="status">{status}</div>
-            <ol>{/* TODO */}</ol>
+            {moves}
           </div>
         </div>
         <input className="reset-button" type="button" onClick={() => this.setState({
           history: [{ squares: Array(this.cols * this.cols).fill(null) }],
           xIsNext: this.state.xIsNext,
+          stepNumber: 0,
         })} value="Restart game" />
       </div>
     );
