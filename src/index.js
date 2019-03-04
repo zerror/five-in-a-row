@@ -8,12 +8,12 @@ import fiMessages from './locale/fi.json';
 
 let locale = "fi";
 
-let session = JSON.parse(sessionStorage.getItem('5R-sessionData') || "{}");
+let session = JSON.parse(sessionStorage.getItem('5R-SessionData') || "{}");
 if (!session) {
   session = { locale: locale };
-  sessionStorage.setItem('5R-sessionData', JSON.stringify(session));
-} else {
-  if ('locale' in session) { locale = session.locale; }
+  sessionStorage.setItem('5R-SessionData', JSON.stringify(session));
+} else if ('locale' in session) {
+  locale = session.locale;
 }
 
 let allMessages = { "fi": fiMessages };
@@ -47,7 +47,7 @@ class HotSwappingIntlProvider extends React.Component {
     addLocaleData(localeData);
 
     session.locale = locale;
-    sessionStorage.setItem('5R-sessionData', JSON.stringify(session));
+    sessionStorage.setItem('5R-SessionData', JSON.stringify(session));
   }
 
   render() {

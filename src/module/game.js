@@ -49,13 +49,12 @@ export class Game extends React.Component {
       mode: 0
     };
 
-    var session = JSON.parse(sessionStorage.getItem('5R-sessionData') || "{}");
-    if (!session) { session = {} };
-    if ('mode' in session) {
-      this.state.mode = session.mode;
+    let session = JSON.parse(sessionStorage.getItem('5R-SessionData') || "{}");
+    if ('state' in session) {
+      this.state = session.state;
     } else {
-      session.mode = this.state.mode;
-      sessionStorage.setItem('5R-sessionData', JSON.stringify(session));
+      session.state = this.state;
+      sessionStorage.setItem('5R-SessionData', JSON.stringify(session));
     }
   }
 
@@ -77,6 +76,10 @@ export class Game extends React.Component {
       history: history.concat([{ squares: squares, }]),
       xIsNext: !this.state.xIsNext,
       stepNumber: history.length,
+    }, function () {
+      let session = JSON.parse(sessionStorage.getItem('5R-SessionData') || "{}");
+      session.state = this.state;
+      sessionStorage.setItem('5R-SessionData', JSON.stringify(session));
     });
   }
 
@@ -85,16 +88,20 @@ export class Game extends React.Component {
       history: [{ squares: Array(this.cols * this.cols).fill(null) }],
       stepNumber: 0,
       mode: mode,
+    }, function () {
+      let session = JSON.parse(sessionStorage.getItem('5R-SessionData') || "{}");
+      session.state = this.state;
+      sessionStorage.setItem('5R-SessionData', JSON.stringify(session));
     });
-
-    var session = JSON.parse(sessionStorage.getItem('5R-sessionData') || "{}");
-    session.mode = mode;
-    sessionStorage.setItem('5R-sessionData', JSON.stringify(session));
   }
 
   jumpTo(step) {
     this.setState({
       stepNumber: step,
+    }, function () {
+      let session = JSON.parse(sessionStorage.getItem('5R-SessionData') || "{}");
+      session.state = this.state;
+      sessionStorage.setItem('5R-SessionData', JSON.stringify(session));
     });
   }
 
