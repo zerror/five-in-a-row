@@ -107,16 +107,16 @@ class Game extends React.Component {
         player: winner }}/></strong>;
     }
 
-    const langSelector = <span><FormattedMessage id="game.language" defaultMessage="Language" />:&nbsp;
+    const langSelector = <div className="langSelector"><FormattedMessage id="game.language" defaultMessage="Language" />:&nbsp;
       {this.props.locale === "fi" ? "FI" : <a href="/" onClick={(e) => this.changeLang(e, "fi")}>FI</a>} |
       {this.props.locale === "en" ? "EN" : <a href="/" onClick={(e) => this.changeLang(e, "en")}>EN</a>}
-    </span>;
+    </div>;
 
 		let steps = (this.mode === 0 ? 1 : 2);
     let undoDisabled = (this.state.stepNumber - steps < 0 ? 'disabled' : '');
     let redoDisabled = (this.state.stepNumber >= history.length - steps ? 'disabled' : '');
 
-    const moves = <div>
+    const undoRedoButtons = <div>
       <button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - steps)}>
         <FormattedMessage id="game.undo" defaultMessage="Undo" /></button>
       <button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + steps)}>
@@ -133,19 +133,20 @@ class Game extends React.Component {
 
           <div className="game-info">
             <div className="status">{status}</div>
-            {moves}
+            {undoRedoButtons}
+
+            <div className="modeLabel"><FormattedMessage id="game.mode" defaultMessage="Mode" />: {this.modes[this.mode]}</div>
+
+            <FormattedMessage id="game.practice_game" defaultMessage="Practice game">
+              {text => <input className="game-button" type="button" onClick={() => this.setState({
+              history: [{ squares: Array(this.cols * this.cols).fill(null) }], stepNumber: 0, })} value={text} />}
+            </FormattedMessage>
+
+            {langSelector}
+
           </div>
         </div>
 
-        <FormattedMessage id="game.practice_game" defaultMessage="Practice game">
-          {text => <input className="reset-button" type="button" onClick={() => this.setState({
-          history: [{ squares: Array(this.cols * this.cols).fill(null) }], stepNumber: 0, })} value={text} />}
-        </FormattedMessage>
-
-        <div><FormattedMessage id="game.mode" defaultMessage="Mode" />: {this.modes[this.mode]}</div>
-        <div>
-          {langSelector}
-        </div>
       </div>
     );
   }

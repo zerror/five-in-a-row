@@ -55,6 +55,12 @@ ol, ul {
   margin-left: 20px;
 }
 
-.reset-button {
+.game-button {
   margin: 10px 0;
+}
+.modeLabel {
+  margin: 40px 0 0 0;
+}
+.langSelector {
+  margin: 40px 0 0 0;
 }
