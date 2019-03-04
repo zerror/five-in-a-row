@@ -102,11 +102,15 @@ class Game extends React.Component {
 
     let status = <FormattedMessage id="game.next_player" defaultMessage="Next player: {player}" values={{
       player: (this.state.xIsNext ? 'X' : 'O') }}/>;
-
     if (winner) {
       status = <strong><FormattedMessage id="game.winner" defaultMessage="Winner: {player}" values={{
         player: winner }}/></strong>;
     }
+
+    const langSelector = <span><FormattedMessage id="game.language" defaultMessage="Language" />:&nbsp;
+      {this.props.locale === "fi" ? "FI" : <a href="/" onClick={(e) => this.changeLang(e, "fi")}>FI</a>} |
+      {this.props.locale === "en" ? "EN" : <a href="/" onClick={(e) => this.changeLang(e, "en")}>EN</a>}
+    </span>;
 
 		let steps = (this.mode === 0 ? 1 : 2);
     let undoDisabled = (this.state.stepNumber - steps < 0 ? 'disabled' : '');
@@ -140,9 +144,7 @@ class Game extends React.Component {
 
         <div><FormattedMessage id="game.mode" defaultMessage="Mode" />: {this.modes[this.mode]}</div>
         <div>
-          <FormattedMessage id="game.language" defaultMessage="Language" />:
-          <a href="/" onClick={(e) => this.changeLang(e, "fi")}>FI</a> |
-          <a href="/" onClick={(e) => this.changeLang(e, "en")}>EN</a>
+          {langSelector}
         </div>
       </div>
     );
@@ -166,7 +168,7 @@ class HotSwappingIntlProvider extends React.Component {
   render() {
     return (
       <IntlProvider locale={this.state.locale} messages={this.state.messages} >
-        <Game action={this.handler.bind(this)} />
+        <Game locale={this.state.locale} action={this.handler.bind(this)} />
       </IntlProvider>
     );
   }
