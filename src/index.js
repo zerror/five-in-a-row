@@ -32,7 +32,7 @@ function Square(props) {
 
 class Board extends React.Component {
   renderSquare(i) {
-  	return <Square key={i} value={this.props.squares[i]} onClick={() => this.props.onClick(i)} />;
+    return <Square key={i} value={this.props.squares[i]} onClick={() => this.props.onClick(i)} />;
   }
 
   render() {
@@ -68,6 +68,11 @@ class Game extends React.Component {
     };
   }
 
+  changeLang(e, lang) {
+    e.preventDefault();
+    this.props.action(lang);
+  }
+
   handleClick(i) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
@@ -76,6 +81,7 @@ class Game extends React.Component {
       return;
     }
     squares[i] = this.state.xIsNext ? 'X' : 'O';
+
     this.setState({
       history: history.concat([{ squares: squares, }]),
       xIsNext: !this.state.xIsNext,
@@ -118,7 +124,7 @@ class Game extends React.Component {
         <DocumentTitle />
         <div className="game">
           <div className="game-board">
-            <Board squares={current.squares} cols={this.cols} onClick={(i) => this.handleClick(i)}/>
+            <Board squares={current.squares} cols={this.cols} onClick={(i) => this.handleClick(i)} />
           </div>
 
           <div className="game-info">
@@ -133,7 +139,35 @@ class Game extends React.Component {
         </FormattedMessage>
 
         <div><FormattedMessage id="game.mode" defaultMessage="Mode" />: {this.modes[this.mode]}</div>
+        <div>
+          <FormattedMessage id="game.language" defaultMessage="Language" />:
+          <a href="/" onClick={(e) => this.changeLang(e, "fi")}>FI</a> |
+          <a href="/" onClick={(e) => this.changeLang(e, "en")}>EN</a>
+        </div>
       </div>
+    );
+  }
+}
+
+class HotSwappingIntlProvider extends React.Component {
+  constructor(props) {
+    super(props);
+    const {initialLocale: locale, initialMessages: messages} = props;
+    this.state = {locale, messages};
+  }
+
+  handler(lang) {
+    this.setState({
+      locale: lang,
+      messages: allMessages[lang] ? allMessages[lang] : {}
+    });
+  }
+
+  render() {
+    return (
+      <IntlProvider locale={this.state.locale} messages={this.state.messages} >
+        <Game action={this.handler.bind(this)} />
+      </IntlProvider>
     );
   }
 }
@@ -141,9 +175,7 @@ class Game extends React.Component {
 // ========================================
 
 ReactDOM.render(
-  <IntlProvider locale={locale} messages={messages} >
-    <Game />
-  </IntlProvider>,
+  <HotSwappingIntlProvider initialLocale={locale} initialMessages={messages} />,
   document.getElementById('root')
 );
 
