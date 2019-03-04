@@ -26,9 +26,7 @@ class Board extends React.Component {
     }
 
     return (
-      <div>
-        {rows}
-      </div>
+      <div>{rows}</div>
     );
   }
 }
@@ -36,6 +34,7 @@ class Board extends React.Component {
 export class Game extends React.Component {
   constructor(props) {
     super(props);
+
     this.cols = 15;
     this.mode = 0;
     this.modes = [<FormattedMessage id="game.practice" defaultMessage="practice" />];
@@ -46,6 +45,14 @@ export class Game extends React.Component {
       xIsNext: true,
       stepNumber: 0,
     };
+
+    var session = sessionStorage.getItem('sessionData');
+    if (!session) { session = {} } else { session = JSON.parse(session) };
+    if ('mode' in session) {
+      this.mode = session.mode;
+    } else {
+      session.mode = this.mode;
+    }
   }
 
   changeLang(e, lang) {
