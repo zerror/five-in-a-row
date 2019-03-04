@@ -56,10 +56,10 @@ ol, ul {
 }
 
 .game-button {
-  margin: 10px 0;
+  margin: 0 0;
 }
 .modeLabel {
-  margin: 40px 0 0 0;
+  margin: 40px 0 10px 0;
 }
 .langSelector {
   margin: 40px 0 0 0;
