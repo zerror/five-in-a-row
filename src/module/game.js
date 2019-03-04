@@ -58,6 +58,21 @@ export class Game extends React.Component {
     }
   }
 
+  componentDidMount() {
+    window.addEventListener("beforeunload", this.saveStateToSessionStorage.bind(this) );
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("beforeunload", this.saveStateToSessionStorage.bind(this) );
+    this.saveStateToSessionStorage();
+  }
+
+  saveStateToSessionStorage() {
+    let session = JSON.parse(sessionStorage.getItem('5R-SessionData') || "{}");
+    session.state = this.state;
+    sessionStorage.setItem('5R-SessionData', JSON.stringify(session));
+  }
+
   changeLang(e, lang) {
     e.preventDefault();
     this.props.action(lang);
@@ -76,10 +91,6 @@ export class Game extends React.Component {
       history: history.concat([{ squares: squares, }]),
       xIsNext: !this.state.xIsNext,
       stepNumber: history.length,
-    }, function () {
-      let session = JSON.parse(sessionStorage.getItem('5R-SessionData') || "{}");
-      session.state = this.state;
-      sessionStorage.setItem('5R-SessionData', JSON.stringify(session));
     });
   }
 
@@ -88,20 +99,12 @@ export class Game extends React.Component {
       history: [{ squares: Array(this.cols * this.cols).fill(null) }],
       stepNumber: 0,
       mode: mode,
-    }, function () {
-      let session = JSON.parse(sessionStorage.getItem('5R-SessionData') || "{}");
-      session.state = this.state;
-      sessionStorage.setItem('5R-SessionData', JSON.stringify(session));
     });
   }
 
   jumpTo(step) {
     this.setState({
       stepNumber: step,
-    }, function () {
-      let session = JSON.parse(sessionStorage.getItem('5R-SessionData') || "{}");
-      session.state = this.state;
-      sessionStorage.setItem('5R-SessionData', JSON.stringify(session));
     });
   }
 
@@ -118,7 +121,7 @@ export class Game extends React.Component {
     }
 
     const langSelector = <div className="lang-selector"><FormattedMessage id="game.language" defaultMessage="Language" />:&nbsp;
-      {this.props.locale === "fi" ? "FI" : <a href="/" onClick={(e) => this.changeLang(e, "fi")}>FI</a>} |
+      {this.props.locale === "fi" ? "FI" : <a href="/" onClick={(e) => this.changeLang(e, "fi")}>FI</a>} |&nbsp;
       {this.props.locale === "en" ? "EN" : <a href="/" onClick={(e) => this.changeLang(e, "en")}>EN</a>}
     </div>;
 
@@ -126,7 +129,7 @@ export class Game extends React.Component {
     let undoDisabled = (this.state.stepNumber - steps < 0 ? 'disabled' : '');
     let redoDisabled = (this.state.stepNumber >= history.length - steps ? 'disabled' : '');
 
-    const undoRedoButtons = <div>
+    const undoRedoButtons = <div className="undo-redo">
       <button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - steps)}>
         <FormattedMessage id="game.undo" defaultMessage="Undo" /></button>
       <button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + steps)}>
@@ -142,6 +145,7 @@ export class Game extends React.Component {
 
           <div className="game-info">
             <div className="status">{status}</div>
+
             {undoRedoButtons}
 
             <div className="mode-label"><FormattedMessage id="game.mode" defaultMessage="Mode" />: {this.modes[this.state.mode]}</div>

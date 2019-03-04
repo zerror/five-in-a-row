@@ -21,6 +21,7 @@ let messages = allMessages[locale] ? allMessages[locale] : {};
 let localeData = require('react-intl/locale-data/' + locale);
 addLocaleData(localeData);
 
+// ========================================
 
 const DocumentTitle = () => (
 	<FormattedMessage id='page.title' defaultMessage='5-in-a-row'>
@@ -31,7 +32,7 @@ const DocumentTitle = () => (
 	</FormattedMessage>
 );
 
-class HotSwappingIntlProvider extends React.Component {
+class IntlProviderWrapper extends React.Component {
   constructor(props) {
     super(props);
     const {initialLocale: locale, initialMessages: messages} = props;
@@ -65,8 +66,8 @@ class HotSwappingIntlProvider extends React.Component {
 // ========================================
 
 ReactDOM.render(
-  <HotSwappingIntlProvider initialLocale={locale} initialMessages={messages}>
-  </HotSwappingIntlProvider>,
+  <IntlProviderWrapper initialLocale={locale} initialMessages={messages}>
+  </IntlProviderWrapper>,
   document.getElementById('root')
 );
 
