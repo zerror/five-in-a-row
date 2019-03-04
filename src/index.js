@@ -7,12 +7,12 @@ import { addLocaleData, IntlProvider, FormattedMessage } from 'react-intl';
 import fiMessages from './locale/fi.json';
 
 let locale = "fi";
-let session = sessionStorage.getItem('sessionData');
+
+let session = JSON.parse(sessionStorage.getItem('5R-sessionData') || "{}");
 if (!session) {
   session = { locale: locale };
-  sessionStorage.setItem('sessionData', JSON.stringify(session));
+  sessionStorage.setItem('5R-sessionData', JSON.stringify(session));
 } else {
-  session = JSON.parse(session);
   if ('locale' in session) { locale = session.locale; }
 }
 
@@ -47,7 +47,7 @@ class HotSwappingIntlProvider extends React.Component {
     addLocaleData(localeData);
 
     session.locale = locale;
-    sessionStorage.setItem('sessionData', JSON.stringify(session));
+    sessionStorage.setItem('5R-sessionData', JSON.stringify(session));
   }
 
   render() {

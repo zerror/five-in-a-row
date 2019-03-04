@@ -36,22 +36,26 @@ export class Game extends React.Component {
     super(props);
 
     this.cols = 15;
-    this.mode = 0;
-    this.modes = [<FormattedMessage id="game.practice" defaultMessage="practice" />];
+    this.modes = [
+      <FormattedMessage id="game.practice" defaultMessage="practice" />,
+      <FormattedMessage id="game.ai" defaultMessage="versus AI" />
+    ];
     this.state = {
       history: [{
         squares: Array(this.cols * this.cols).fill(null),
       }],
       xIsNext: true,
       stepNumber: 0,
+      mode: 0
     };
 
-    var session = sessionStorage.getItem('sessionData');
-    if (!session) { session = {} } else { session = JSON.parse(session) };
+    var session = JSON.parse(sessionStorage.getItem('5R-sessionData') || "{}");
+    if (!session) { session = {} };
     if ('mode' in session) {
-      this.mode = session.mode;
+      this.state.mode = session.mode;
     } else {
-      session.mode = this.mode;
+      session.mode = this.state.mode;
+      sessionStorage.setItem('5R-sessionData', JSON.stringify(session));
     }
   }
 
@@ -60,7 +64,7 @@ export class Game extends React.Component {
     this.props.action(lang);
   }
 
-  handleClick(i) {
+  handleClickSquare(i) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
@@ -74,6 +78,18 @@ export class Game extends React.Component {
       xIsNext: !this.state.xIsNext,
       stepNumber: history.length,
     });
+  }
+
+  changeMode(mode) {
+    this.setState({
+      history: [{ squares: Array(this.cols * this.cols).fill(null) }],
+      stepNumber: 0,
+      mode: mode,
+    });
+
+    var session = JSON.parse(sessionStorage.getItem('5R-sessionData') || "{}");
+    session.mode = mode;
+    sessionStorage.setItem('5R-sessionData', JSON.stringify(session));
   }
 
   jumpTo(step) {
@@ -99,7 +115,7 @@ export class Game extends React.Component {
       {this.props.locale === "en" ? "EN" : <a href="/" onClick={(e) => this.changeLang(e, "en")}>EN</a>}
     </div>;
 
-		let steps = (this.mode === 0 ? 1 : 2);
+		let steps = (this.state.mode === 0 ? 1 : 2);
     let undoDisabled = (this.state.stepNumber - steps < 0 ? 'disabled' : '');
     let redoDisabled = (this.state.stepNumber >= history.length - steps ? 'disabled' : '');
 
@@ -114,18 +130,21 @@ export class Game extends React.Component {
       <div>
         <div className="game">
           <div className="game-board">
-            <Board squares={current.squares} cols={this.cols} onClick={(i) => this.handleClick(i)} />
+            <Board squares={current.squares} cols={this.cols} onClick={(i) => this.handleClickSquare(i)} />
           </div>
 
           <div className="game-info">
             <div className="status">{status}</div>
             {undoRedoButtons}
 
-            <div className="mode-label"><FormattedMessage id="game.mode" defaultMessage="Mode" />: {this.modes[this.mode]}</div>
+            <div className="mode-label"><FormattedMessage id="game.mode" defaultMessage="Mode" />: {this.modes[this.state.mode]}</div>
 
-            <FormattedMessage id="game.practice_game" defaultMessage="Practice game">
-              {text => <input className="game-button" type="button" onClick={() => this.setState({
-              history: [{ squares: Array(this.cols * this.cols).fill(null) }], stepNumber: 0, })} value={text} />}
+            <FormattedMessage id="game.practice_game" defaultMessage="Practice">
+              {text => <input className="game-button" type="button" onClick={() => this.changeMode(0)} value={text} />}
+            </FormattedMessage>
+
+            <FormattedMessage id="game.vs_ai" defaultMessage="Versus AI">
+              {text => <input className="game-button" type="button" onClick={() => this.changeMode(1)} value={text} />}
             </FormattedMessage>
 
             {langSelector}
