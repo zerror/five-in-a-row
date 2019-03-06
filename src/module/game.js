@@ -1,13 +1,17 @@
 import React from 'react';
-import {calculateWinner} from '../functions';
+import { calculateWinner, getAIMove } from '../functions';
 import { FormattedMessage } from 'react-intl';
 
+const MODE_PRACTICE = 0;
+const MODE_VERSUS_AI = 1;
+// const MODE_VERSUS_HUMAN = 2;
+
 function Square(props) {
-  return (
-  	<button className={props.value ? "square " + props.value : "square"} onClick={props.onClick}>
-      {props.value}
-    </button>
-  );
+	return (
+		<button className={props.value ? "square " + props.value : "square"} onClick={props.onClick}>
+			{props.value}
+		</button>
+	);
 }
 
 class Board extends React.Component {
@@ -16,18 +20,18 @@ class Board extends React.Component {
   }
 
   render() {
-    var rows = [];
-	  for (let i = 0; i < this.props.cols; i++) {
-	    let cells = []
-	    for (let j = 0; j < this.props.cols; j++) {
-        cells.push(this.renderSquare(i * this.props.cols + j));
-	    }
-      rows.push(<div className="board-row" key={i}>{cells}</div>);
-    }
+		let rows = [];
+		for (let i = 0; i < this.props.cols; i++) {
+			let cells = [];
+			for (let j = 0; j < this.props.cols; j++) {
+				cells.push(this.renderSquare(i * this.props.cols + j));
+			}
+			rows.push(<div className="board-row" key={i} > {cells} </div>);
+		}
 
-    return (
-      <div>{rows}</div>
-    );
+		return (
+			<div>{rows}</div>
+		);
   }
 }
 
@@ -46,7 +50,7 @@ export class Game extends React.Component {
       }],
       xIsNext: true,
       stepNumber: 0,
-      mode: 0
+      mode: MODE_PRACTICE
     };
 
     let session = JSON.parse(sessionStorage.getItem('5R-SessionData') || "{}");
@@ -78,11 +82,12 @@ export class Game extends React.Component {
     this.props.action(lang);
   }
 
-  handleClickSquare(i) {
+  addMarker(i, playerMove = true) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
     if (calculateWinner(squares, this.cols) || squares[i]) {
+    	this.setState({ xIsNext: !this.state.xIsNext });
       return;
     }
     squares[i] = this.state.xIsNext ? 'X' : 'O';
@@ -91,7 +96,13 @@ export class Game extends React.Component {
       history: history.concat([{ squares: squares, }]),
       xIsNext: !this.state.xIsNext,
       stepNumber: history.length,
-    });
+    }, function () {
+			if (this.state.mode === MODE_VERSUS_AI && playerMove) {
+				let { move, moveScore } = getAIMove(Object.assign({}, this.state), squares.slice(), this.cols);
+				this.addMarker(move, false);
+			}
+		});
+
   }
 
   changeMode(mode) {
@@ -103,9 +114,10 @@ export class Game extends React.Component {
   }
 
   jumpTo(step) {
-    this.setState({
-      stepNumber: step,
-    });
+  	if ((this.state.stepNumber - step)% 2 !== 0) {
+  		this.setState({ xIsNext: !this.state.xIsNext });
+  	}
+    this.setState({ stepNumber: step });
   }
 
   render() {
@@ -125,7 +137,7 @@ export class Game extends React.Component {
       {this.props.locale === "en" ? "EN" : <a href="/" onClick={(e) => this.changeLang(e, "en")}>EN</a>}
     </div>;
 
-		let steps = (this.state.mode === 0 ? 1 : 2);
+	let steps = (this.state.mode === MODE_PRACTICE ? 1 : 2);
     let undoDisabled = (this.state.stepNumber - steps < 0 ? 'disabled' : '');
     let redoDisabled = (this.state.stepNumber >= history.length - steps ? 'disabled' : '');
 
@@ -140,7 +152,7 @@ export class Game extends React.Component {
       <div>
         <div className="game">
           <div className="game-board">
-            <Board squares={current.squares} cols={this.cols} onClick={(i) => this.handleClickSquare(i)} />
+            <Board squares={current.squares} cols={this.cols} onClick={(i) => this.addMarker(i) } />
           </div>
 
           <div className="game-info">
@@ -151,11 +163,11 @@ export class Game extends React.Component {
             <div className="mode-label"><FormattedMessage id="game.mode" defaultMessage="Mode" />: {this.modes[this.state.mode]}</div>
 
             <FormattedMessage id="game.practice_game" defaultMessage="Practice">
-              {text => <input className="game-button" type="button" onClick={() => this.changeMode(0)} value={text} />}
+              {text => <input className="game-button" type="button" onClick={() => this.changeMode(MODE_PRACTICE)} value={text} />}
             </FormattedMessage>
 
             <FormattedMessage id="game.vs_ai" defaultMessage="Versus AI">
-              {text => <input className="game-button" type="button" onClick={() => this.changeMode(1)} value={text} />}
+              {text => <input className="game-button" type="button" onClick={() => this.changeMode(MODE_VERSUS_AI)} value={text} />}
             </FormattedMessage>
 
             {langSelector}
