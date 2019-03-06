@@ -6,9 +6,11 @@
   "game.undo": "edellinen",
   "game.redo": "seuraava",
   "game.practice": "harjoitus",
-  "game.ai": "tekoäly",
+  "game.mode_vs_ai": "vs. tekoäly",
+  "game.mode_ai_vs": "vs. tekoäly",
   "game.practice_game": "Harjoitus",
   "game.vs_ai": "Vs. Tekoäly",
+  "game.ai_vs": "Tekoäly Vs.",
   "game.next_player": "Seuraava pelaaja: {player}",
   "game.winner": "Voittaja: {player}"
 }

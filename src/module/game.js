@@ -4,7 +4,8 @@ import { FormattedMessage } from 'react-intl';
 
 const MODE_PRACTICE = 0;
 const MODE_VERSUS_AI = 1;
-// const MODE_VERSUS_HUMAN = 2;
+const MODE_AI_VERSUS = 2;
+// const MODE_VERSUS_HUMAN = 3;
 
 function Square(props) {
 	return (
@@ -42,7 +43,8 @@ export class Game extends React.Component {
     this.cols = 15;
     this.modes = [
       <FormattedMessage id="game.practice" defaultMessage="practice" />,
-      <FormattedMessage id="game.ai" defaultMessage="versus AI" />
+      <FormattedMessage id="game.mode_vs_ai" defaultMessage="versus AI" />,
+      <FormattedMessage id="game.mode_ai_vs" defaultMessage="AI versus" />,
     ];
     this.state = {
       history: [{
@@ -100,17 +102,35 @@ export class Game extends React.Component {
 			if (this.state.mode === MODE_VERSUS_AI && playerMove) {
 				let { move, moveScore } = getAIMove(Object.assign({}, this.state), squares.slice(), this.cols);
 				this.addMarker(move, false);
+
+			} else	if (this.state.mode === MODE_AI_VERSUS && playerMove) {
+    		let { move, moveScore } = getAIMove(Object.assign({}, this.state), squares.slice(), this.cols);
+				this.addMarker(move, false);
 			}
 		});
 
   }
 
   changeMode(mode) {
+  	let xIsNext = this.state.xIsNext;
+		if (mode === MODE_VERSUS_AI) {
+			xIsNext = true;
+		} else if (mode === MODE_AI_VERSUS) {
+			xIsNext = false;
+		}
+
     this.setState({
       history: [{ squares: Array(this.cols * this.cols).fill(null) }],
       stepNumber: 0,
+      xIsNext: xIsNext,
       mode: mode,
-    });
+    }, function () {
+    	if (mode === MODE_AI_VERSUS) {
+    		const squares = this.state.history[0].squares.slice();
+    		let { move, moveScore } = getAIMove(Object.assign({}, this.state), squares.slice(), this.cols);
+				this.addMarker(move, false);
+			}
+		});
   }
 
   jumpTo(step) {
@@ -168,6 +188,10 @@ export class Game extends React.Component {
 
             <FormattedMessage id="game.vs_ai" defaultMessage="Versus AI">
               {text => <input className="game-button" type="button" onClick={() => this.changeMode(MODE_VERSUS_AI)} value={text} />}
+            </FormattedMessage>
+
+            <FormattedMessage id="game.ai_vs" defaultMessage="AI versus">
+              {text => <input className="game-button" type="button" onClick={() => this.changeMode(MODE_AI_VERSUS)} value={text} />}
             </FormattedMessage>
 
             {langSelector}

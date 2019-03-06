@@ -164,7 +164,7 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 		if (opponentInARowBackward && opponentInARowForward) {
 			score++;
 			if (opponentInARowBackward + opponentInARowForward >= 3) {
-				score += 5;
+				score += 6;
 			}
 		}
 	}
