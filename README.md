@@ -74,32 +74,6 @@ In any case feel free to try the game out!
 
 \*
 
-**_**You have been warned!_**
-
-\*
-
-\*
-
-\*
-
-\*
-
-\*
-
-\*
-
-\*
-
-\*
-
-\*
-
-\*
-
-\*
-
-\*
-
 #### Used techonologies
 
 Here are the answers to the question what technologies were used?
