@@ -6,6 +6,7 @@ export function calculateWinner(squares, cols) {
     let mark = squares[i];
     if (!mark) continue;
 
+		let indexes = [];
     let startOfRow = (i === 0 || (i % cols) === 0);
     let fitsInRow = startOfRow || ((i + 1) % cols !== 0 && (i + 2) % cols !== 0 && (i + 3) % cols !== 0 && (i + 4) % cols !== 0);
     let fitsInCol = i + cols * 4 < squares.length;
@@ -13,11 +14,13 @@ export function calculateWinner(squares, cols) {
     let fitsInUpDiagonal = i + cols * 4 - 4 < squares.length;
 
     if (fitsInRow && squares[i + 1] === mark && squares[i + 2] === mark && squares[i + 3] === mark && squares[i + 4] === mark) {
-			return mark;
+    	[].push.apply(indexes, [i, (i + 1), (i + 2), (i + 3), (i + 4)]);
+      return { winner: mark, indexes: indexes };
 		}
 
 		if (fitsInCol && squares[i + cols] === mark && squares[i + cols * 2] === mark && squares[i + cols * 3] === mark && squares[i + cols * 4] === mark) {
-			return mark;
+			[].push.apply(indexes, [i, (i + cols * 1), (i + cols * 2), (i + cols * 3), (i + cols * 4)]);
+      return { winner: mark, indexes: indexes };
 		}
 
     if (fitsInDownDiagonal) {
@@ -25,7 +28,8 @@ export function calculateWinner(squares, cols) {
         if (squares[i + cols * x + x] !== mark) { break; }
         if ((i + cols * x + x) % cols === 0) { break; }
         if (x === 4) {
-        	return mark;
+        	[].push.apply(indexes, [i, (i + cols * 1 + 1), (i + cols * 2 + 2), (i + cols * 3 + 3), (i + cols * 4 + 4)]);
+        	return { winner: mark, indexes: indexes };
         }
       }
     }
@@ -34,13 +38,14 @@ export function calculateWinner(squares, cols) {
         if (squares[i + cols * x - x] !== mark) { break; }
         if ((i + cols * x - x) % cols === 0 && x !== 4) { break; }
         if (x === 4) {
-        	return mark;
+        	[].push.apply(indexes, [i, (i + cols * 1 - 1), (i + cols * 2 - 2), (i + cols * 3 - 3), (i + cols * 4 - 4)]);
+        	return { winner: mark, indexes: indexes };
         }
       }
     }
   }
 
-  return null;
+  return { winner: null, indexes: [] };
 }
 
 function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
@@ -109,6 +114,10 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 			if (opponentInARowBackward === j - 1) { opponentRowBackwardSpace++ }
 		}
 		if (!opponentInARowBackward) optionsBackward++;
+	}
+
+	if (ownInARowForward === 5 ||ownInARowBackward === 5) {
+		return 200;
 	}
 
 	if (optionsBackward + optionsForward >= 4 || opponentInARowForward + opponentInARowBackward >= 3) {
@@ -210,9 +219,10 @@ export function getAIMove(state, squares, cols, depth = 0) {
     // let fitsInDownDiagonal = fitsInDownDiagonalDown ||fitsInDownDiagonalUp;
     // let fitsInUpDiagonal = i + cols * 4 - 4 < squares.length;
 
-		if (calculateWinner(squares, cols) === thisMark) {
-			return { move: i, moveScore: 100 }
-		}
+		// const { winner, indexes } = calculateWinner(squares, cols);
+		// if (winner === thisMark) {
+		// 	return { move: i, moveScore: 100 }
+		// }
 
 		thisScore = -100;
 		// if (fitsInRow) {

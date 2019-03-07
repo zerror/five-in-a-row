@@ -37,7 +37,9 @@ ol, ul {
 .square.O {
   color:red;
 }
-
+.square.highlite-square {
+  color:blue;
+}
 .square:focus {
   outline: none;
 }

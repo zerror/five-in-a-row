@@ -8,16 +8,17 @@ const MODE_AI_VERSUS = 2;
 // const MODE_VERSUS_HUMAN = 3;
 
 function Square(props) {
+	let className = props.className + (props.value ? " " + props.value : "");
 	return (
-		<button className={props.value ? "square " + props.value : "square"} onClick={props.onClick}>
+		<button className={className} onClick={props.onClick}>
 			{props.value}
 		</button>
 	);
 }
 
 class Board extends React.Component {
-  renderSquare(i) {
-    return <Square key={i} value={this.props.squares[i]} onClick={() => this.props.onClick(i)} />;
+  renderSquare(i, className) {
+    return <Square key={i} value={this.props.squares[i]} className={className} onClick={() => this.props.onClick(i)} />;
   }
 
   render() {
@@ -25,7 +26,12 @@ class Board extends React.Component {
 		for (let i = 0; i < this.props.cols; i++) {
 			let cells = [];
 			for (let j = 0; j < this.props.cols; j++) {
-				cells.push(this.renderSquare(i * this.props.cols + j));
+				let index = i * this.props.cols + j;
+				let className = "square";
+				if (this.props.highlite.indexOf(index) >= 0) {
+					className += " highlite-square";
+				}
+				cells.push(this.renderSquare(index, className));
 			}
 			rows.push(<div className="board-row" key={i} > {cells} </div>);
 		}
@@ -88,7 +94,8 @@ export class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares, this.cols) || squares[i]) {
+    const { winner, indexes } = calculateWinner(squares, this.cols);
+    if (winner || squares[i]) {
     	this.setState({ xIsNext: !this.state.xIsNext });
       return;
     }
@@ -143,13 +150,11 @@ export class Game extends React.Component {
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares, this.cols);
+    const { winner, indexes } = calculateWinner(current.squares, this.cols);
 
-    let status = <FormattedMessage id="game.next_player" defaultMessage="Next player: {player}" values={{
-      player: (this.state.xIsNext ? 'X' : 'O') }}/>;
+    let status = <FormattedMessage id="game.next_player" defaultMessage="Next player: {player}" values={{ player: (this.state.xIsNext ? 'X' : 'O') }}/>;
     if (winner) {
-      status = <strong><FormattedMessage id="game.winner" defaultMessage="Winner: {player}" values={{
-        player: winner }}/></strong>;
+		  status = <strong><FormattedMessage id="game.winner" defaultMessage="Winner: {player}" values={{ player: winner }}/></strong>;
     }
 
     const langSelector = <div className="lang-selector"><FormattedMessage id="game.language" defaultMessage="Language" />:&nbsp;
@@ -172,7 +177,7 @@ export class Game extends React.Component {
       <div>
         <div className="game">
           <div className="game-board">
-            <Board squares={current.squares} cols={this.cols} onClick={(i) => this.addMarker(i) } />
+            <Board squares={current.squares} highlite={indexes} cols={this.cols} onClick={(i) => this.addMarker(i) } />
           </div>
 
           <div className="game-info">
