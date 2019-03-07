@@ -240,6 +240,13 @@ export class Game extends React.Component {
 						{this.props.locale === "en" ? "EN" : <a href="/" onClick={(e) => this.changeLang(e, "en")}>EN</a>}
 					</div>
 
+					<div className="readme-link">
+						<FormattedMessage id="page.here-be" defaultMessage="Here be.. " />
+						<a href="https://github.com/zerror/five-in-a-row/blob/master/README.md" target="_blank" >
+							<FormattedMessage id="page.readme-link" defaultMessage="README!" />
+						</a>
+					</div>
+
 				</div>
 			</div>
     );

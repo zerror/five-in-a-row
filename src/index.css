@@ -56,7 +56,7 @@ ol, ul {
 .mode-label {
   margin: 40px 0 10px 0;
 }
-.lang-selector {
+.lang-selector, .readme-link {
   margin: 40px 0 0 0;
 }
 
