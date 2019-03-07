@@ -184,6 +184,7 @@ export function getAIMove(state, squares, cols, depth = 0) {
 
 	let thisStep = state.stepNumber + depth;
 	let thisMark = state.xIsNext ? 'X' : 'O';
+
 	if (depth % 2 !== 0) {
 		thisMark = !state.xIsNext ? 'X' : 'O';
 	}
@@ -206,42 +207,16 @@ export function getAIMove(state, squares, cols, depth = 0) {
 
 		squares[i] = thisMark;
 
-		// let startOfRow = (i === 0 || (i % cols) === 0);
-		// let fitsInRowToRight = startOfRow || ((i + 1) % cols !== 0 && (i + 2) % cols !== 0 && (i + 3) % cols !== 0 && (i + 4) % cols !== 0);
-		// let fitsInRowToLeft = ((i - 1) % cols !== 0 && (i - 2) % cols !== 0 && (i - 3) % cols !== 0 && (i - 4) % cols !== 0);
-    // let fitsInRow = fitsInRowToRight || fitsInRowToLeft;
-    // let firstRow = i < cols;
-		// let fitsInColDown = firstRow || i + cols * 4 < squares.length;
-    // let fitsInColUp = i - cols * 4 >= 0;
-    // let fitsInCol = fitsInColDown || fitsInColUp;
-    // let fitsInDownDiagonalDown = i + cols * 4 + 4 < squares.length;
-    // let fitsInDownDiagonalUp = i - cols * 4 - 4 >= 0;
-    // let fitsInDownDiagonal = fitsInDownDiagonalDown ||fitsInDownDiagonalUp;
-    // let fitsInUpDiagonal = i + cols * 4 - 4 < squares.length;
-
-		// const { winner, indexes } = calculateWinner(squares, cols);
-		// if (winner === thisMark) {
-		// 	return { move: i, moveScore: 100 }
-		// }
 
 		thisScore = -100;
-		// if (fitsInRow) {
 		thisScore += scoreMove(i, squares, cols, thisMark, 1, 0);
-		// }
-		// if (fitsInCol) {
 		thisScore += scoreMove(i, squares, cols, thisMark, cols, 0);
-		// }
-		// if (fitsInDownDiagonal) {
 		thisScore += scoreMove(i, squares, cols, thisMark, cols, 1);
-		// }
-		// if (fitsInUpDiagonal) {
 		thisScore += scoreMove(i, squares, cols, thisMark, cols, -1);
-		// }
 
 		// if (depth < 1) {
 		// 	let { move, moveScore } = getAIMove(state, squares, cols, depth + 1);
 		// 	thisScore = thisScore - moveScore;
-		// 	// console.log(move, moveScore, thisScore);
 		// }
 
 		if (thisScore > score) {
@@ -251,8 +226,6 @@ export function getAIMove(state, squares, cols, depth = 0) {
 
 		squares[i] = null;
 	}
-
-	// console.log(depth, thisMark, bestMove, "score", score);
 
 	return { move: bestMove, moveScore: score };
 }

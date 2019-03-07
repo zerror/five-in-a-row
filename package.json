@@ -10,6 +10,7 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-intl": "^2.8.0",
+    "react-resizable": "^1.7.5",
     "react-scripts": "^2.1.5",
     "typescript": "^3.3.3333"
   },

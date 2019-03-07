@@ -1,24 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import {Game} from './module/game.js';
+import './index.css';
 import { addLocaleData, IntlProvider, FormattedMessage } from 'react-intl';
 
 import fiMessages from './locale/fi.json';
 
-let locale = "fi";
+let locale = "en";
+let allMessages = { "fi": fiMessages };
+let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
 
-let session = JSON.parse(sessionStorage.getItem('5R-SessionData') || "{}");
 if (!session) {
   session = { locale: locale };
-  sessionStorage.setItem('5R-SessionData', JSON.stringify(session));
+  localStorage.setItem('5R-SessionData', JSON.stringify(session));
 } else if ('locale' in session) {
   locale = session.locale;
 }
 
-let allMessages = { "fi": fiMessages };
 let messages = allMessages[locale] ? allMessages[locale] : {};
 let localeData = require('react-intl/locale-data/' + locale);
+
 addLocaleData(localeData);
 
 // ========================================
@@ -48,7 +49,7 @@ class IntlProviderWrapper extends React.Component {
     addLocaleData(localeData);
 
     session.locale = locale;
-    sessionStorage.setItem('5R-SessionData', JSON.stringify(session));
+    localStorage.setItem('5R-SessionData', JSON.stringify(session));
   }
 
   render() {
@@ -66,8 +67,7 @@ class IntlProviderWrapper extends React.Component {
 // ========================================
 
 ReactDOM.render(
-  <IntlProviderWrapper initialLocale={locale} initialMessages={messages}>
-  </IntlProviderWrapper>,
+  <IntlProviderWrapper initialLocale={locale} initialMessages={messages} />,
   document.getElementById('root')
 );
 

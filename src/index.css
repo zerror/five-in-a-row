@@ -2,9 +2,12 @@ body {
   font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
 }
-
 ol, ul {
   padding-left: 30px;
+}
+
+.status {
+  margin-bottom: 10px;
 }
 
 .board-row:after {
@@ -12,28 +15,17 @@ ol, ul {
   content: "";
   display: table;
 }
-
-.status {
-  margin-bottom: 10px;
-}
-
 .square {
   background: #fff;
   border: 1px solid #999;
   float: left;
   font-size: 24px;
   font-weight: bold;
-  line-height: 34px;
-  height: 34px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 34px;
 }
-.board-row:nth-of-type(even) .square:nth-child(odd) {background: #f6f6f6}
-.board-row:nth-of-type(odd) .square:nth-child(even) {background: #f6f6f6}
-
 .square.O {
   color:red;
 }
@@ -43,6 +35,8 @@ ol, ul {
 .square:focus {
   outline: none;
 }
+.board-row:nth-of-type(even) .square:nth-child(odd) {background: #f6f6f6}
+.board-row:nth-of-type(odd) .square:nth-child(even) {background: #f6f6f6}
 
 .kbd-navigation .square:focus {
   background: #ddd;
@@ -52,7 +46,6 @@ ol, ul {
   display: flex;
   flex-direction: row;
 }
-
 .game-info {
   margin-left: 20px;
 }
@@ -65,4 +58,22 @@ ol, ul {
 }
 .lang-selector {
   margin: 40px 0 0 0;
+}
+
+.board.react-resizable {
+  position: relative;
+}
+.react-resizable-handle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  bottom: 0;
+  right: 0;
+  background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2IDYiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiNmZmZmZmYwMCIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI2cHgiIGhlaWdodD0iNnB4Ij48ZyBvcGFjaXR5PSIwLjMwMiI+PHBhdGggZD0iTSA2IDYgTCAwIDYgTCAwIDQuMiBMIDQgNC4yIEwgNC4yIDQuMiBMIDQuMiAwIEwgNiAwIEwgNiA2IEwgNiA2IFoiIGZpbGw9IiMwMDAwMDAiLz48L2c+PC9zdmc+');
+  background-position: bottom right;
+  padding: 0 3px 3px 0;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  box-sizing: border-box;
+  cursor: se-resize;
 }
