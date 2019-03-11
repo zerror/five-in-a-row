@@ -149,9 +149,9 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 			}
 		}
 		if (opponentInARowForward >= 2) {
-			score+= 2;
+			score+= 1;
 			if (opponentRowForwardSpace) {
-				score += 2;
+				score += 1;
 				if (opponentRowBackwardSpace) {
 					score += 2;
 				}
@@ -167,9 +167,9 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 			}
 		}
 		if (opponentInARowBackward >= 2) {
-			score+= 2;
+			score+= 1;
 			if (opponentRowBackwardSpace) {
-				score += 2;
+				score += 1;
 				if (opponentRowForwardSpace) {
 					score += 2;
 				}
