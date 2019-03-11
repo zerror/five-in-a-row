@@ -179,7 +179,7 @@ export class Game extends React.Component {
   }
 
   jumpTo(step) {
-  	if ((this.state.stepNumber - step) % 2 !== 0) {
+  	if (this.state.mode === MODE_PRACTICE) {
   		this.setState({ xIsNext: !this.state.xIsNext });
   	}
     this.setState({ stepNumber: step });
