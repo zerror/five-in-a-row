@@ -123,38 +123,44 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 	}
 
 	if (optionsBackward + optionsForward >= 4 || opponentInARowForward + opponentInARowBackward >= 3) {
-		score++;
+
 		if (ownInARowForward && optionsForward > ownInARowForward) {
-			score++;
+			score += 1;
 			if (ownForward > ownInARowForward) {
 				score++;
 			}
 			if (ownInARowForward >= 3) {
-				score += 3;
+				score += 4;
+				if (optionsBackward && optionsForward) {
+					score += 6;
+				}
 			}
 		}
 		if (ownInARowBackward && optionsBackward > ownInARowBackward) {
-			score++;
+			score += 1;
 			if (ownBackward > ownInARowBackward) {
-				score++;
+				score += 1;
 			}
 			if (ownInARowBackward >= 3) {
-				score += 3;
+				score += 4;
+				if (optionsBackward && optionsForward) {
+					score += 6;
+				}
 			}
 		}
 		if (ownInARowBackward + ownInARowForward >= 2) {
-			score++;
+			score += 1;
 			if (spaceInARowBackward + spaceInARowForward > 1) {
-				score++;
+				score += 1;
 			}
 		}
+
 		if (opponentInARowForward >= 2) {
-			score+= 1;
 			if (opponentRowForwardSpace) {
 				score += 1;
-				if (opponentRowBackwardSpace) {
-					score += 2;
-				}
+			}
+			if (opponentRowBackwardSpace) {
+				score += 1;
 			}
 			if (opponentInARowForward >= 3) {
 				score += 3;
@@ -167,12 +173,11 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 			}
 		}
 		if (opponentInARowBackward >= 2) {
-			score+= 1;
 			if (opponentRowBackwardSpace) {
 				score += 1;
-				if (opponentRowForwardSpace) {
-					score += 2;
-				}
+			}
+			if (opponentRowForwardSpace) {
+				score += 1;
 			}
 			if (opponentInARowBackward >= 3) {
 				score+= 3;
@@ -185,9 +190,15 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 			}
 		}
 		if (opponentInARowBackward && opponentInARowForward) {
-			score++;
+			score += 1;
 			if (opponentInARowBackward + opponentInARowForward >= 3) {
-				score += 4;
+				score += 1;
+				if (opponentRowBackwardSpace) {
+					score += 1;
+				}
+				if (opponentRowForwardSpace) {
+					score += 1;
+				}
 				if (opponentRowBackwardSpace || opponentRowForwardSpace) {
 					score += 6;
 				}
