@@ -1,6 +1,6 @@
 import React from 'react';
 import { ResizableBox } from 'react-resizable';
-import { calculateWinner, getAIMove } from '../functions';
+import { calculateWinner, getAIMove, DEV_ENV } from '../functions';
 import { FormattedMessage } from 'react-intl';
 
 const MODE_PRACTICE = 0;
@@ -14,9 +14,10 @@ const SQUARE_WIDTH = 34;
 
 function Square(props) {
 	let className = props.className + (props.value ? " " + props.value : "");
+	let title = (DEV_ENV ? props.index : '');
 
 	return (
-		<button className={className} onClick={props.onClick}>
+		<button className={className} onClick={props.onClick} title={title}>
 			{props.value}
 		</button>
 	);
@@ -29,7 +30,7 @@ class Board extends React.Component {
 	}
 
   renderSquare(i, className) {
-    return <Square key={i} value={this.props.squares[i]} className={className} onClick={() => this.props.onClick(i)} />;
+    return <Square key={i} index={i} value={this.props.squares[i]} className={className} onClick={() => this.props.onClick(i)} />;
   }
 
 	render() {

@@ -1,5 +1,7 @@
 /*** Functions.js ***/
 
+export const DEV_ENV = (document.location.host === 'localhost:3000');
+
 export function calculateWinner(squares, cols) {
 
   for (let i = 0; i < squares.length; i++) {
@@ -147,26 +149,38 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 			}
 		}
 		if (opponentInARowForward >= 2) {
-			score++;
+			score+= 2;
+			if (opponentRowForwardSpace) {
+				score += 2;
+				if (opponentRowBackwardSpace) {
+					score += 2;
+				}
+			}
 			if (opponentInARowForward >= 3) {
 				score += 3;
 				if (opponentRowForwardSpace) {
-					score += 4;
+					score += 5;
 				}
 				if (opponentInARowForward >= 4) {
-					score += 6;
+					score += 15;
 				}
 			}
 		}
 		if (opponentInARowBackward >= 2) {
-			score++;
+			score+= 2;
+			if (opponentRowBackwardSpace) {
+				score += 2;
+				if (opponentRowForwardSpace) {
+					score += 2;
+				}
+			}
 			if (opponentInARowBackward >= 3) {
 				score+= 3;
 				if (opponentRowBackwardSpace) {
-					score += 4;
+					score += 5;
 				}
 				if (opponentInARowBackward >= 4) {
-					score += 6;
+					score += 20;
 				}
 			}
 		}
@@ -225,6 +239,7 @@ export function getAIMove(state, squares, cols, depth = 0) {
 		if (thisScore > score) {
 			score = thisScore;
 			bestMove = i;
+			if (DEV_ENV) { console.log("move:", bestMove, "score:", score); }
 		}
 
 		squares[i] = null;
