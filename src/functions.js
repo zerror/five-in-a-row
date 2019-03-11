@@ -116,7 +116,7 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 		if (!opponentInARowBackward) optionsBackward++;
 	}
 
-	if (ownInARowForward === 5 ||ownInARowBackward === 5) {
+	if (ownInARowForward === 4 || ownInARowBackward === 4) {
 		return 200;
 	}
 
@@ -151,9 +151,9 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 			if (opponentInARowForward >= 3) {
 				score += 3;
 				if (opponentRowForwardSpace) {
-					score += 3;
+					score += 4;
 				}
-				if (opponentInARowForward === 4) {
+				if (opponentInARowForward >= 4) {
 					score += 6;
 				}
 			}
@@ -163,9 +163,9 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 			if (opponentInARowBackward >= 3) {
 				score+= 3;
 				if (opponentRowBackwardSpace) {
-					score += 3;
+					score += 4;
 				}
-				if (opponentInARowBackward === 4) {
+				if (opponentInARowBackward >= 4) {
 					score += 6;
 				}
 			}
@@ -173,7 +173,10 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 		if (opponentInARowBackward && opponentInARowForward) {
 			score++;
 			if (opponentInARowBackward + opponentInARowForward >= 3) {
-				score += 6;
+				score += 4;
+				if (opponentRowBackwardSpace || opponentRowForwardSpace) {
+					score += 6;
+				}
 			}
 		}
 	}
@@ -215,7 +218,7 @@ export function getAIMove(state, squares, cols, depth = 0) {
 		thisScore += scoreMove(i, squares, cols, thisMark, cols, -1);
 
 		// if (depth < 1) {
-		// 	let { move, moveScore } = getAIMove(state, squares, cols, depth + 1);
+		// 	let move = getAIMove(state, squares, cols, depth + 1);
 		// 	thisScore = thisScore - moveScore;
 		// }
 
@@ -227,5 +230,5 @@ export function getAIMove(state, squares, cols, depth = 0) {
 		squares[i] = null;
 	}
 
-	return { move: bestMove, moveScore: score };
+	return bestMove;
 }

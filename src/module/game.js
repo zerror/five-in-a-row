@@ -133,7 +133,7 @@ export class Game extends React.Component {
     const current = history[history.length - 1];
     const squares = current.squares.slice();
     const { winner, indexes } = calculateWinner(squares, this.state.cols);
-    if (winner || squares[i]) {
+    if ((winner && indexes) || squares[i]) {
     	this.setState({ xIsNext: !this.state.xIsNext });
       return;
     }
@@ -145,11 +145,11 @@ export class Game extends React.Component {
       stepNumber: history.length,
     }, function () {
 			if (this.state.mode === MODE_VERSUS_AI && playerMove) {
-				let { move, moveScore } = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
+				let move = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
 				this.addMarker(move, false);
 
 			} else	if (this.state.mode === MODE_AI_VERSUS && playerMove) {
-    		let { move, moveScore } = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
+    		let move = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
 				this.addMarker(move, false);
 			}
 		});
@@ -171,7 +171,7 @@ export class Game extends React.Component {
     }, function () {
     	if (mode === MODE_AI_VERSUS) {
     		const squares = this.state.history[0].squares.slice();
-    		let { move, moveScore } = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
+    		let move = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
 				this.addMarker(move, false);
 			}
 		});
@@ -242,7 +242,7 @@ export class Game extends React.Component {
 
 					<div className="readme-link">
 						<FormattedMessage id="page.here-be" defaultMessage="Here be.. " />
-						<a href="https://github.com/zerror/five-in-a-row/blob/master/README.md" target="_blank" >
+						<a href="https://github.com/zerror/five-in-a-row/blob/master/README.md" target="_blank" rel="noopener noreferrer">
 							<FormattedMessage id="page.readme-link" defaultMessage="README!" />
 						</a>
 					</div>
