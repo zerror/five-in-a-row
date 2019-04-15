@@ -2,7 +2,7 @@ var server = require('express')();
 var http = require('http').Server(server);
 var io = require('socket.io')(http);
 
-const port = process.env.port || 3001;
+const port = process.env.PORT || 3001;
 
 server.get('/', function(req, res){
   res.sendFile(__dirname + '/public/index.html');

@@ -8,8 +8,8 @@ import fiMessages from './locale/fi.json';
 
 import socketIOClient from "socket.io-client";
 
-const port = process.env.port || 3001;
-const host = process.env.port ? 'http://0.0.0.0:' : 'http://localhost:';
+const port = process.env.PORT || 3001;
+const host = process.env.PORT ? 'http://0.0.0.0:' : 'http://localhost:';
 const socket = socketIOClient(host + port);
 
 socket.on('message', function (data) {
