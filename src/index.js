@@ -8,7 +8,9 @@ import fiMessages from './locale/fi.json';
 
 import socketIOClient from "socket.io-client";
 
-const socket = socketIOClient('http://localhost:3001');
+const port = process.env.port || 3001;
+const host = process.env.port ? 'http://0.0.0.0:' : 'http://localhost:';
+const socket = socketIOClient(host + port);
 
 socket.on('message', function (data) {
 	console.log(data, "!!!");
