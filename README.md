@@ -88,12 +88,14 @@ Here are the answers to the question what technologies were used?
 >
 > Game state is stored to _Local Storage_.
 >
+> **Socket.io** is used to emit messages from server to client.
+>
 > Code itself is stored in git and it is server by Heroku. 
 >
 
 Next steps:
 * add multiplayer mode with a lobby and chat
-* add leader board to store the player scores
+* add scoring logic and leader board for player scores
 * AI improvements/different difficulty levels
 * UI/layout improvements
 * mmm beer..
