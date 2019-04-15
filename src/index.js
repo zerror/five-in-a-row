@@ -6,6 +6,15 @@ import { addLocaleData, IntlProvider, FormattedMessage } from 'react-intl';
 
 import fiMessages from './locale/fi.json';
 
+import socketIOClient from "socket.io-client";
+
+const socket = socketIOClient('http://localhost:3001');
+
+socket.on('message', function (data) {
+	console.log(data, "!!!");
+	socket.emit('ack', { my: 'data' });
+});
+
 let locale = "en";
 let allMessages = { "fi": fiMessages };
 let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
@@ -37,7 +46,10 @@ class IntlProviderWrapper extends React.Component {
   constructor(props) {
     super(props);
     const {initialLocale: locale, initialMessages: messages} = props;
-    this.state = {locale, messages};
+		this.state = {
+			locale,
+			messages
+		};
   }
 
   handler(locale) {
