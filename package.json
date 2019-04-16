@@ -12,6 +12,8 @@
     "react-dom": "16.5.2",
     "react-intl": "2.8.0",
     "react-resizable": "1.7.5",
+    "react-router": "5.0.0",
+    "react-router-dom": "5.0.0",
     "react-scripts": "2.1.5",
     "socket.io": "2.2.0",
     "socket.io-client": "2.2.0",
@@ -28,7 +30,7 @@
     "extends": "react-app"
   },
   "engines": {
-	"node": "10.15.3"
+    "node": "10.15.3"
   },
   "browserslist": [
     ">0.2%",
