@@ -13,7 +13,6 @@ export class HeadingInfo extends React.Component {
     super(props);
 
   	this.state = {
-  		locale: this.props.locale,
   		mode: this.props.mode,
   		nickname: this.props.nickname
 		}
@@ -41,8 +40,8 @@ export class HeadingInfo extends React.Component {
 
 					<div className="lang-selector">
 						<FormattedMessage id="game.language" defaultMessage="Language"/>:&nbsp;
-						{this.state.locale === "fi" ? "FI" : <a href="/" onClick={(e) => this.changeLang(e, "fi")}>FI</a>} |&nbsp;
-						{this.state.locale === "en" ? "EN" : <a href="/" onClick={(e) => this.changeLang(e, "en")}>EN</a>}
+						{this.props.locale === "fi" ? "FI" : <a href="/" onClick={(e) => this.changeLang(e, "fi")}>FI</a>} |&nbsp;
+						{this.props.locale === "en" ? "EN" : <a href="/" onClick={(e) => this.changeLang(e, "en")}>EN</a>}
 					</div>
 
 					<div className="mode-label"><FormattedMessage id="game.mode" defaultMessage="Mode"/>: {modes[this.state.mode]}
