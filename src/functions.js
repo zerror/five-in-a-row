@@ -139,7 +139,7 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 		}
 
 		if (ownInARowForward && optionsForward > ownInARowForward) {
-			score += 1;
+			score += 2;
 			if (ownForward > ownInARowForward) {
 				score++;
 			}
@@ -154,7 +154,7 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 			}
 		}
 		if (ownInARowBackward && optionsBackward > ownInARowBackward) {
-			score += 1;
+			score += 2;
 			if (ownBackward > ownInARowBackward) {
 				score += 1;
 			}
@@ -169,7 +169,7 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 			}
 		}
 		if (ownInARowBackward + ownInARowForward >= 2) {
-			score += 1;
+			score += 2;
 			if (spaceInARowBackward + spaceInARowForward > 1) {
 				score += 1;
 			}
