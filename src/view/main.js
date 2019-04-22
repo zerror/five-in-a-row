@@ -16,6 +16,7 @@ export class Main extends React.Component {
     	this.state = session.gameState;
 		} else {
     	session.gameState = this.state;
+    	localStorage.setItem('5R-SessionData', JSON.stringify(session));
     }
   }
 
