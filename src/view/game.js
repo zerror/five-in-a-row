@@ -3,7 +3,7 @@ import { ResizableBox } from 'react-resizable';
 import { calculateWinner, getAIMove, initialGameState } from '../functions';
 import { FormattedMessage } from 'react-intl';
 import { MODE_PRACTICE, MODE_AI_VERSUS, MODE_VERSUS_AI, MIN_COLUMNS, MAX_COLUMNS, SQUARE_WIDTH, DEV_ENV } from '../common';
-import {HeadingInfo} from "../component/heading-info";
+import {Header} from "../component/header";
 import {GameOptions} from "../component/game-options";
 
 function Square(props) {
@@ -171,7 +171,7 @@ export class Game extends React.Component {
 
     return (
     	<div>
-				<HeadingInfo nickname={this.state.nickname} locale={this.props.locale} action={this.props.action} mode={this.state.mode} />
+				<Header nickname={this.state.nickname} locale={this.props.locale} action={this.props.action} mode={this.state.mode} />
 
 				<div className="game">
 

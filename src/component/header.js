@@ -8,7 +8,7 @@ const modes = [
 	<FormattedMessage id="game.mode_ai_vs" defaultMessage="AI versus player" />,
 ];
 
-export class HeadingInfo extends React.Component {
+export class Header extends React.Component {
 	constructor(props) {
     super(props);
 

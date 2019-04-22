@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { MODE_PRACTICE, MIN_COLUMNS } from '../common';
 import { initialGameState } from '../functions';
-import { HeadingInfo } from "../component/heading-info";
+import { Header } from "../component/header";
 
 export class Nick extends React.Component {
   constructor(props) {
@@ -53,7 +53,7 @@ export class Nick extends React.Component {
     return (
 			<div className="main">
 
-				<HeadingInfo nickname={this.state.nickname} locale={this.props.locale} action={this.props.action} mode={this.state.mode} />
+				<Header nickname={this.state.nickname} locale={this.props.locale} action={this.props.action} mode={this.state.mode} />
 
 				<h1>
 					<FormattedMessage id="page.title" defaultMessage="Five-in-a-Row" />
