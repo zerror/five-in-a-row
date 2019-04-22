@@ -23,7 +23,7 @@ export class Main extends React.Component {
   	this.setState({ nickname: event.target.value });
   }
 
-  setNickname(event) {
+  useNickname(event) {
   	if (this.state.nickname) {
   		document.location.href = "/game";
   	}
@@ -63,7 +63,7 @@ export class Main extends React.Component {
 					</FormattedMessage>
 
 					<FormattedMessage id="button.use_nickname" defaultMessage="Use">
-						{text => <input className="game-button" disabled={!this.state.nickname ? "disabled" : ""} type="button" onClick={() => this.setNickname()} value={text} />}
+						{text => <input className="game-button" disabled={!this.state.nickname ? "disabled" : ""} type="button" onClick={() => this.useNickname()} value={text} />}
 					</FormattedMessage>
 
 					<FormattedMessage id="button.remove_nickname" defaultMessage="Remove">
