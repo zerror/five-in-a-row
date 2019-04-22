@@ -96,7 +96,7 @@ export class Game extends React.Component {
 
 		if (width > oldWidth && newSize <= MAX_COLUMNS) {
 			this.width = width;
-			this.setState({ cols: newSize });
+			this.setState({ cols: newSize }, this.saveGameStateToSessionStorage());
 		} else if (width < (oldWidth - SQUARE_WIDTH / 2) && newSize > MIN_COLUMNS) {
 			newSize = newSize - 1;
 			this.width = width;
