@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { MODE_PRACTICE, MODE_AI_VERSUS, MODE_VERSUS_AI, MIN_COLUMNS } from '../common';
+import { MODE_PRACTICE, MIN_COLUMNS } from '../common';
 import { initialGameState } from '../functions';
 import { HeadingInfo } from "../component/heading-info";
 

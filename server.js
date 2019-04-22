@@ -8,8 +8,8 @@ const port = process.env.PORT || 3001;
 
 server.use(express.static(path.resolve(__dirname, './build')));
 
-server.get('/', function(req, res){
-  res.sendFile(__dirname + '/public/index.html');
+server.get('*', function(req, res){
+  res.sendFile(__dirname + '/build/');
 });
 
 http.listen(port, function(){

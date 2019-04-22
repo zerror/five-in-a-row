@@ -57,7 +57,7 @@ export class HeadingInfo extends React.Component {
 					</div>
 
 					<FormattedMessage id="button.back" defaultMessage="Back">
-						{text => <input className="back-button" disabled={document.location.pathname == "/" ? "disabled" : ""} type="button" onClick={() => this.goBack()} value={text} />}
+						{text => <input className="back-button" disabled={document.location.pathname === "/" ? "disabled" : ""} type="button" onClick={() => this.goBack()} value={text} />}
 					</FormattedMessage>
 
 				</div>
