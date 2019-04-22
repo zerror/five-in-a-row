@@ -1,6 +1,16 @@
+import { MODE_AI_VERSUS, DEV_ENV } from "./common";
+
 /*** Functions.js ***/
 
-export const DEV_ENV = (document.location.host === 'localhost:3000');
+export function initialGameState(mode, columns) {
+	return {
+		history: [{ squares: Array(columns * columns).fill(null) }],
+		cols: columns,
+		xIsNext: (mode === MODE_AI_VERSUS ? false : true),
+		stepNumber: 0,
+		mode: mode
+	};
+}
 
 export function calculateWinner(squares, cols) {
 
@@ -124,15 +134,22 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 
 	if (optionsBackward + optionsForward >= 4 || opponentInARowForward + opponentInARowBackward >= 3) {
 
+		if (optionsForward >= (cols / 2) - 1 && optionsBackward >= (cols / 2) - 1) {
+			score += 1;
+		}
+
 		if (ownInARowForward && optionsForward > ownInARowForward) {
 			score += 1;
 			if (ownForward > ownInARowForward) {
 				score++;
 			}
 			if (ownInARowForward >= 3) {
-				score += 4;
+				score += 5;
 				if (optionsBackward && optionsForward) {
 					score += 6;
+				}
+				if (spaceInARowBackward + spaceInARowForward > 1) {
+					score += 2;
 				}
 			}
 		}
@@ -142,9 +159,12 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 				score += 1;
 			}
 			if (ownInARowBackward >= 3) {
-				score += 4;
+				score += 5;
 				if (optionsBackward && optionsForward) {
 					score += 6;
+				}
+				if (spaceInARowBackward + spaceInARowForward > 1) {
+					score += 2;
 				}
 			}
 		}
@@ -168,7 +188,13 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 					score += 5;
 				}
 				if (opponentInARowForward >= 4) {
-					score += 15;
+					score += 20;
+				}
+				if (opponentInARowBackward) {
+					score += 10;
+				}
+				if (opponentRowForwardSpace || opponentRowBackwardSpace) {
+					score += 10;
 				}
 			}
 		}
@@ -186,6 +212,12 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 				}
 				if (opponentInARowBackward >= 4) {
 					score += 20;
+				}
+				if (opponentInARowForward) {
+					score += 10;
+				}
+				if (opponentRowForwardSpace || opponentRowBackwardSpace) {
+					score += 10;
 				}
 			}
 		}
@@ -205,6 +237,7 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 			}
 		}
 	}
+
 	return score;
 }
 
@@ -213,9 +246,9 @@ export function getAIMove(state, squares, cols, depth = 0) {
 	let thisStep = state.stepNumber + depth;
 	let thisMark = state.xIsNext ? 'X' : 'O';
 
-	if (depth % 2 !== 0) {
-		thisMark = !state.xIsNext ? 'X' : 'O';
-	}
+	// if (depth % 2 !== 0) {
+	// 	thisMark = !state.xIsNext ? 'X' : 'O';
+	// }
 
 	let middleGround = Math.floor(squares.length / 2);
 	let middleGroundBegin = middleGround - cols * 2;
@@ -234,7 +267,6 @@ export function getAIMove(state, squares, cols, depth = 0) {
 		}
 
 		squares[i] = thisMark;
-
 
 		thisScore = -100;
 		thisScore += scoreMove(i, squares, cols, thisMark, 1, 0);

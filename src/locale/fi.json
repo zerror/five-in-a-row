@@ -1,18 +1,26 @@
 {
   "page.title": "5-rivissä",
-  "page.here-be": "Täällä on.. ",
-  "page.readme-link": "LUEMUT!",
+  "page.here_you_can_find": "Täältä löytyy: ",
+  "page.readme_link": "LUEMUT!",
 
+  "placeholder.nickname": "nimimerkki..",
+
+  "button.use_nickname": "Käytä",
+  "button.remove_nickname": "Poista",
+  "button.practice_game": "Harjoitus",
+  "button.vs_ai": "Vs. Tekoäly",
+  "button.ai_vs": "Tekoäly Vs.",
+
+  "game.na": "N/A",
+  "game.start_the": "Aloita peli valitsemalla nimimerkki!",
+  "game.player": "Pelaaja",
   "game.language": "Kieli",
   "game.mode": "Pelimuoto",
   "game.undo": "edellinen",
   "game.redo": "seuraava",
-  "game.practice": "harjoitus",
-  "game.mode_vs_ai": "vs. tekoäly",
-  "game.mode_ai_vs": "vs. tekoäly",
-  "game.practice_game": "Harjoitus",
-  "game.vs_ai": "Vs. Tekoäly",
-  "game.ai_vs": "Tekoäly Vs.",
+  "game.practice": "harjoituspeli",
+  "game.mode_vs_ai": "pelaaja vs. tekoäly",
+  "game.mode_ai_vs": "tekoäly vs. pelaaja",
   "game.next_player": "Seuraava pelaaja: {player}",
   "game.winner": "Voittaja: {player}"
 }

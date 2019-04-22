@@ -1,16 +1,10 @@
 import React from 'react';
 import { ResizableBox } from 'react-resizable';
-import { calculateWinner, getAIMove, DEV_ENV } from '../functions';
+import { calculateWinner, getAIMove, initialGameState } from '../functions';
 import { FormattedMessage } from 'react-intl';
-
-const MODE_PRACTICE = 0;
-const MODE_VERSUS_AI = 1;
-const MODE_AI_VERSUS = 2;
-// const MODE_VERSUS_HUMAN = 3;
-
-const MIN_COLUMNS = 15;
-const MAX_COLUMNS = 25;
-const SQUARE_WIDTH = 34;
+import { MODE_PRACTICE, MODE_AI_VERSUS, MODE_VERSUS_AI, MIN_COLUMNS, MAX_COLUMNS, SQUARE_WIDTH, DEV_ENV } from '../common';
+import {HeadingInfo} from "../component/heading-info";
+import {GameOptions} from "../component/game-options";
 
 function Square(props) {
 	let className = props.className + (props.value ? " " + props.value : "");
@@ -68,53 +62,34 @@ export class Game extends React.Component {
   constructor(props) {
     super(props);
 
-		this.modes = [
-      <FormattedMessage id="game.practice" defaultMessage="practice" />,
-      <FormattedMessage id="game.mode_vs_ai" defaultMessage="versus AI" />,
-      <FormattedMessage id="game.mode_ai_vs" defaultMessage="AI versus" />,
-    ];
-    this.width = SQUARE_WIDTH * MIN_COLUMNS;
-		this.state = {
-      history: [{ squares: Array(MIN_COLUMNS * MIN_COLUMNS).fill(null) }],
-      cols: MIN_COLUMNS,
-      xIsNext: true,
-      stepNumber: 0,
-      mode: MODE_PRACTICE
-    };
+    this.state = initialGameState(MODE_PRACTICE, MIN_COLUMNS);
+		this.width = SQUARE_WIDTH * MIN_COLUMNS;
 
     let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
-    if ('state' in session) {
-      this.state = session.state;
+    if ('gameState' in session) {
+      this.state = session.gameState;
       this.width = SQUARE_WIDTH * this.state.cols;
-    } else {
-      session.state = this.state;
-      localStorage.setItem('5R-SessionData', JSON.stringify(session));
     }
 
     this.resizeBoard = this.resizeBoard.bind(this);
   }
 
   componentDidMount() {
-    window.addEventListener("beforeunload", this.saveStateToSessionStorage.bind(this) );
+    window.addEventListener("beforeunload", this.saveGameStateToSessionStorage.bind(this) );
   }
 
   componentWillUnmount() {
-    window.removeEventListener("beforeunload", this.saveStateToSessionStorage.bind(this) );
-    this.saveStateToSessionStorage();
+    window.removeEventListener("beforeunload", this.saveGameStateToSessionStorage.bind(this) );
+    this.saveGameStateToSessionStorage();
   }
 
-  saveStateToSessionStorage() {
+  saveGameStateToSessionStorage() {
     let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
-    session.state = this.state;
+    session.gameState = this.state;
     localStorage.setItem('5R-SessionData', JSON.stringify(session));
   }
 
-  changeLang(e, lang) {
-    e.preventDefault();
-    this.props.action(lang);
-  }
-
-  resizeBoard (e, data) {
+  resizeBoard(e, data) {
   	let width = data.size.width;
   	let oldWidth = this.width;
 		let newSize = Math.floor(width / SQUARE_WIDTH);
@@ -149,29 +124,7 @@ export class Game extends React.Component {
 				let move = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
 				this.addMarker(move, false);
 
-			} else	if (this.state.mode === MODE_AI_VERSUS && playerMove) {
-    		let move = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
-				this.addMarker(move, false);
-			}
-		});
-  }
-
-  changeMode(mode) {
-  	let xIsNext = this.state.xIsNext;
-		if (mode === MODE_VERSUS_AI) {
-			xIsNext = true;
-		} else if (mode === MODE_AI_VERSUS) {
-			xIsNext = false;
-		}
-
-    this.setState({
-      history: [{ squares: Array(this.state.cols * this.state.cols).fill(null) }],
-      stepNumber: 0,
-      xIsNext: xIsNext,
-      mode: mode,
-    }, function () {
-    	if (mode === MODE_AI_VERSUS) {
-    		const squares = this.state.history[0].squares.slice();
+			} else if (this.state.mode === MODE_AI_VERSUS && playerMove) {
     		let move = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
 				this.addMarker(move, false);
 			}
@@ -183,6 +136,20 @@ export class Game extends React.Component {
   		this.setState({ xIsNext: !this.state.xIsNext });
   	}
     this.setState({ stepNumber: step });
+  }
+
+  changeMode(mode) {
+		let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
+		session.gameState = initialGameState(mode, session.gameState.cols);
+		localStorage.setItem('5R-SessionData', JSON.stringify(session));
+
+    this.setState(session.gameState, function () {
+    	if (mode === MODE_AI_VERSUS) {
+    		const squares = this.state.history[0].squares.slice();
+    		let move = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
+				this.addMarker(move, false);
+			}
+		});
   }
 
   render() {
@@ -203,51 +170,31 @@ export class Game extends React.Component {
 		let hideResize = this.state.stepNumber ? ".react-resizable-handle { display: none; }" : "";
 
     return (
-			<div className="game">
+    	<div>
+				<HeadingInfo nickname={this.state.nickname} locale={this.props.locale} action={this.props.action} mode={this.state.mode} />
 
-				<style>
-					{ `.square { line-height: ${SQUARE_WIDTH}px;	height: ${SQUARE_WIDTH}px;	width: ${SQUARE_WIDTH}px; }` }
-					{ hideResize }
-				</style>
+				<div className="game">
 
-				<Board squares={squares} highlite={indexes} cols={cols} resizeBoard={this.resizeBoard} onClick={(i) => this.addMarker(i) } />
+					<style>
+						{ `.square { line-height: ${SQUARE_WIDTH}px;	height: ${SQUARE_WIDTH}px;	width: ${SQUARE_WIDTH}px; }` }
+						{ hideResize }
+					</style>
 
-				<div className="game-info">
-					<div className="status">{status}</div>
+					<Board squares={squares} highlite={indexes} cols={cols} resizeBoard={this.resizeBoard} onClick={(i) => this.addMarker(i) } />
 
-					<div className="undo-redo">
-						<button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - steps)}>
-							<FormattedMessage id="game.undo" defaultMessage="Undo" /></button>
-						<button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + steps)}>
-							<FormattedMessage id="game.redo" defaultMessage="Redo" /></button>
+					<div className="game-info">
+						<div className="status">{status}</div>
+
+						<div className="undo-redo">
+							<button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - steps)}>
+								<FormattedMessage id="game.undo" defaultMessage="Undo" /></button>
+							<button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + steps)}>
+								<FormattedMessage id="game.redo" defaultMessage="Redo" /></button>
+						</div>
+
+						<GameOptions action={this.changeMode.bind(this)} />
+
 					</div>
-
-					<div className="mode-label"><FormattedMessage id="game.mode" defaultMessage="Mode" />: {this.modes[this.state.mode]}</div>
-
-					<FormattedMessage id="game.practice_game" defaultMessage="Practice">
-						{text => <input className="game-button" type="button" onClick={() => this.changeMode(MODE_PRACTICE)} value={text} />}
-					</FormattedMessage>
-
-					<FormattedMessage id="game.vs_ai" defaultMessage="Versus AI">
-						{text => <input className="game-button" type="button" onClick={() => this.changeMode(MODE_VERSUS_AI)} value={text} />}
-					</FormattedMessage>
-
-					<FormattedMessage id="game.ai_vs" defaultMessage="AI versus">
-						{text => <input className="game-button" type="button" onClick={() => this.changeMode(MODE_AI_VERSUS)} value={text} />}
-					</FormattedMessage>
-
-					<div className="lang-selector"><FormattedMessage id="game.language" defaultMessage="Language" />:&nbsp;
-						{this.props.locale === "fi" ? "FI" : <a href="/" onClick={(e) => this.changeLang(e, "fi")}>FI</a>} |&nbsp;
-						{this.props.locale === "en" ? "EN" : <a href="/" onClick={(e) => this.changeLang(e, "en")}>EN</a>}
-					</div>
-
-					<div className="readme-link">
-						<FormattedMessage id="page.here-be" defaultMessage="Here be.. " />
-						<a href="https://github.com/zerror/five-in-a-row/blob/master/README.md" target="_blank" rel="noopener noreferrer">
-							<FormattedMessage id="page.readme-link" defaultMessage="README!" />
-						</a>
-					</div>
-
 				</div>
 			</div>
     );
