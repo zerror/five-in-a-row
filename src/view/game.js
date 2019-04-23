@@ -142,7 +142,6 @@ export class Game extends React.Component {
 		let nickname = session.gameState.nickname;
 		session.gameState = initialGameState(mode, session.gameState.cols);
 		session.gameState.nickname = nickname;
-		localStorage.setItem('5R-SessionData', JSON.stringify(session));
 
     this.setState(session.gameState, function () {
     	this.props.handleMode(mode);
@@ -169,14 +168,13 @@ export class Game extends React.Component {
 		let steps = (this.state.mode === MODE_PRACTICE ? 1 : 2);
     let undoDisabled = (this.state.stepNumber - steps < 0 ? 'disabled' : '');
     let redoDisabled = (this.state.stepNumber >= history.length - steps ? 'disabled' : '');
-		let hideResize = this.state.stepNumber ? ".react-resizable-handle { display: none; }" : "";
 
     return (
 			<div className="game">
 
 				<style>
 					{ `.square { line-height: ${SQUARE_WIDTH}px;	height: ${SQUARE_WIDTH}px;	width: ${SQUARE_WIDTH}px; }` }
-					{ hideResize }
+					{ this.state.stepNumber ? ".react-resizable-handle { display: none; }" : "" }
 				</style>
 
 				<Board squares={squares} highlite={indexes} cols={cols} resizeBoard={this.resizeBoard} onClick={(i) => this.addMarker(i) } />

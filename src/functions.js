@@ -198,6 +198,9 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 					score += 10;
 				}
 			}
+			if (opponentInARowBackward) {
+				score += 10;
+			}
 		}
 		if (opponentInARowBackward >= 2) {
 			if (opponentRowBackwardSpace) {
@@ -220,6 +223,9 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 				if (opponentRowForwardSpace || opponentRowBackwardSpace) {
 					score += 10;
 				}
+			}
+			if (opponentInARowForward) {
+				score += 10;
 			}
 		}
 		if (opponentInARowBackward && opponentInARowForward) {

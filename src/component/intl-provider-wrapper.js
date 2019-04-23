@@ -1,5 +1,5 @@
 import React from "react";
-import {addLocaleData, FormattedMessage, IntlProvider} from "react-intl";
+import {addLocaleData, IntlProvider} from "react-intl";
 import { Router } from "./router"
 import { DocumentTitle } from "./document-title"
 import fiMessages from "../locale/fi";
@@ -8,33 +8,31 @@ import {MIN_COLUMNS, MODE_NA, MODE_PRACTICE} from "../common";
 import {initialGameState} from "../functions";
 
 let allMessages = { "fi": fiMessages };
-let locale = "en";
-let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
-
-if (!session) {
-  session = { locale: locale };
-  localStorage.setItem('5R-SessionData', JSON.stringify(session));
-} else if ('locale' in session) {
-  locale = session.locale;
-}
-
-let localeData = require('react-intl/locale-data/' + locale);
-
-addLocaleData(localeData);
 
 export class IntlProviderWrapper extends React.Component {
   constructor(props) {
     super(props);
 
-		let messages = allMessages[locale] ? allMessages[locale] : {};
 		this.state = {
-			locale,
-			messages,
+			locale: "en",
+			messages: {},
 			mode: MODE_NA,
 			nickname: ""
 		};
 
 		let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
+		if (!session) {
+			session.locale = this.state.locale;
+			localStorage.setItem('5R-SessionData', JSON.stringify(session));
+		} else if ('locale' in session) {
+			this.state.locale = session.locale;
+			this.state.messages = (allMessages[this.state.locale] ? allMessages[this.state.locale] : {});
+		}
+
+		let localeData = require('react-intl/locale-data/' + this.state.locale);
+
+		addLocaleData(localeData);
+
   	if ('gameState' in session) {
   		this.state.mode = session.gameState.mode;
   		if ('nickname' in session.gameState && session.gameState.nickname) {
@@ -49,7 +47,7 @@ export class IntlProviderWrapper extends React.Component {
   	this.setNickname = this.setNickname.bind(this);
   }
 
-  handle(locale) {
+  setLocale(locale) {
     let messages = allMessages[locale] ? allMessages[locale] : {};
 		this.setState({
       locale: locale,
@@ -59,7 +57,8 @@ export class IntlProviderWrapper extends React.Component {
     let localeData = require('react-intl/locale-data/' + locale);
     addLocaleData(localeData);
 
-    session.locale = locale;
+    let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
+  	session.locale = locale;
     localStorage.setItem('5R-SessionData', JSON.stringify(session));
   }
 
@@ -87,7 +86,7 @@ export class IntlProviderWrapper extends React.Component {
         <div className="body-wrapper">
           <DocumentTitle />
 
-          <Header nickname={this.state.nickname}  mode={this.state.mode} locale={this.state.locale} action={this.handle.bind(this)} />
+          <Header nickname={this.state.nickname}  mode={this.state.mode} locale={this.state.locale} action={this.setLocale.bind(this)} />
 
 					<Router handleNickname={this.setNickname} handleMode={this.setMode}/>
         </div>
