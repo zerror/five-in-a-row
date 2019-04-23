@@ -8,19 +8,16 @@ export class Nickname extends React.Component {
     super(props);
 
 		this.state = initialGameState(MODE_PRACTICE, MIN_COLUMNS);
-		this.state.nickname = "";
 
     let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
     if ('gameState' in session) {
     	this.state = session.gameState;
-		} else {
-    	session.gameState = this.state;
-    	localStorage.setItem('5R-SessionData', JSON.stringify(session));
-    }
+		}
   }
 
   saveNickname(event) {
   	this.setState({ nickname: event.target.value });
+  	this.props.handleNickname(event.target.value);
   }
 
   useNickname(event) {
@@ -31,6 +28,7 @@ export class Nickname extends React.Component {
 
   removeNickname() {
   	this.setState({ nickname: "" });
+  	this.props.handleNickname("");
   }
 
   componentDidMount() {

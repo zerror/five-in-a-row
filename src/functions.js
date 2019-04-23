@@ -8,7 +8,8 @@ export function initialGameState(mode, columns) {
 		cols: columns,
 		xIsNext: (mode === MODE_AI_VERSUS ? false : true),
 		stepNumber: 0,
-		mode: mode
+		mode: mode,
+		nickname: ""
 	};
 }
 

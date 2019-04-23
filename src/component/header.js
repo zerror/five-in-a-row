@@ -9,14 +9,6 @@ const modes = [
 ];
 
 export class Header extends React.Component {
-	constructor(props) {
-    super(props);
-
-  	this.state = {
-  		mode: this.props.mode,
-  		nickname: this.props.nickname
-		}
-  }
 
   changeLang(e, lang) {
     e.preventDefault();
@@ -34,7 +26,7 @@ export class Header extends React.Component {
 					<div className="player-nick">
 						<FormattedMessage id="game.player" defaultMessage="Player"/>:&nbsp;
 						<FormattedMessage id="game.na" defaultMessage="N/A">
-							{text => (this.state.nickname ? this.state.nickname : text)}
+							{text => (this.props.nickname ? this.props.nickname : text)}
 						</FormattedMessage>
 					</div>
 
@@ -44,7 +36,7 @@ export class Header extends React.Component {
 						{this.props.locale === "en" ? "EN" : <a href="/" onClick={(e) => this.changeLang(e, "en")}>EN</a>}
 					</div>
 
-					<div className="mode-label"><FormattedMessage id="game.mode" defaultMessage="Mode"/>: {modes[this.state.mode]}
+					<div className="mode-label"><FormattedMessage id="game.mode" defaultMessage="Mode"/>: {modes[this.props.mode]}
 					</div>
 
 					<div className="readme-link">

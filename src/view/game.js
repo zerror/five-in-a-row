@@ -62,7 +62,6 @@ export class Game extends React.Component {
     super(props);
 
     this.state = initialGameState(MODE_PRACTICE, MIN_COLUMNS);
-		this.state.nickname = "";
 		this.width = SQUARE_WIDTH * MIN_COLUMNS;
 
     let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
@@ -140,10 +139,13 @@ export class Game extends React.Component {
 
   changeMode(mode) {
 		let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
+		let nickname = session.gameState.nickname;
 		session.gameState = initialGameState(mode, session.gameState.cols);
+		session.gameState.nickname = nickname;
 		localStorage.setItem('5R-SessionData', JSON.stringify(session));
 
     this.setState(session.gameState, function () {
+    	this.props.handleMode(mode);
     	if (mode === MODE_AI_VERSUS) {
     		const squares = this.state.history[0].squares.slice();
     		let move = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);

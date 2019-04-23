@@ -4,7 +4,8 @@ import { Router } from "./router"
 import { DocumentTitle } from "./document-title"
 import fiMessages from "../locale/fi";
 import {Header} from "./header";
-import {MODE_NA} from "../common";
+import {MIN_COLUMNS, MODE_NA, MODE_PRACTICE} from "../common";
+import {initialGameState} from "../functions";
 
 let allMessages = { "fi": fiMessages };
 let locale = "en";
@@ -28,8 +29,24 @@ export class IntlProviderWrapper extends React.Component {
 		let messages = allMessages[locale] ? allMessages[locale] : {};
 		this.state = {
 			locale,
-			messages
+			messages,
+			mode: MODE_NA,
+			nickname: ""
 		};
+
+		let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
+  	if ('gameState' in session) {
+  		this.state.mode = session.gameState.mode;
+  		if ('nickname' in session.gameState && session.gameState.nickname) {
+				this.state.nickname = session.gameState.nickname;
+			}
+  	} else {
+  		session.gameState = initialGameState(MODE_PRACTICE, MIN_COLUMNS);
+  		localStorage.setItem('5R-SessionData', JSON.stringify(session));
+  	}
+
+  	this.setMode = this.setMode.bind(this);
+  	this.setNickname = this.setNickname.bind(this);
   }
 
   handle(locale) {
@@ -46,26 +63,33 @@ export class IntlProviderWrapper extends React.Component {
     localStorage.setItem('5R-SessionData', JSON.stringify(session));
   }
 
+  setNickname(nickname) {
+    this.setState({
+      nickname: nickname
+    });
+    let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
+    session.gameState.nickname = nickname;
+  	localStorage.setItem('5R-SessionData', JSON.stringify(session));
+  }
+
+  setMode(mode) {
+    this.setState({
+      mode: mode
+    });
+    let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
+    session.gameState.mode = mode;
+  	localStorage.setItem('5R-SessionData', JSON.stringify(session));
+  }
+
   render() {
-
-  	let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
-  	let nickname = <FormattedMessage id="game.na" defaultMessage="N/A" />;
-  	let mode = MODE_NA;
-  	if ('gameState' in session && session.gameState.nickname) {
-  		mode = session.gameState.mode;
-  		if ('nickname' in session.gameState && session.gameState.nickname) {
-				nickname = session.gameState.nickname;
-			}
-  	}
-
     return (
       <IntlProvider locale={this.state.locale} messages={this.state.messages} >
         <div className="body-wrapper">
           <DocumentTitle />
 
-          <Header nickname={nickname}  mode={mode} locale={this.state.locale} action={this.handle.bind(this)} />
+          <Header nickname={this.state.nickname}  mode={this.state.mode} locale={this.state.locale} action={this.handle.bind(this)} />
 
-					<Router />
+					<Router handleNickname={this.setNickname} handleMode={this.setMode}/>
         </div>
       </IntlProvider>
     );
