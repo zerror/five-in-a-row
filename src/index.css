@@ -1,6 +1,6 @@
 body {
   font: 14px "Century Gothic", Futura, sans-serif;
-  margin: 20px;
+  margin: 0;
 }
 ol, ul {
   padding-left: 30px;
@@ -41,13 +41,15 @@ ol, ul {
   background: #ddd;
 }
 
+.main, .game {
+  margin: 20px;
+}
 .game {
   display: flex;
   flex-direction: row;
 }
 .game-info {
-  margin-left: 0px;
-  margin-bottom: 20px;
+  margin: 20px;
 }
 .game-button {
   margin: 40px 5px 0 0;
@@ -90,3 +92,30 @@ ol, ul {
   box-sizing: border-box;
   cursor: se-resize;
 }
+
+form {
+	background: #000;
+	padding: 2px;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+form input {
+	border: 0;
+	padding: 10px 0 10px 6px;
+	width: 90%;
+	margin-right: 2px;
+}
+form button {
+	width: 9%;
+	background: rgb(229, 237, 255);
+	border: none;
+	padding: 10px;
+}
+#messages {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+#messages li { padding: 5px 10px; }
+#messages li:nth-child(odd) { background: #eee; }

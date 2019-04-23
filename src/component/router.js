@@ -7,7 +7,7 @@ export function Router(props) {
 	return (
 		<BrowserRouter>
 			<Route exact path="/" render={(view) => <Nickname handleNickname={props.handleNickname} />}/>
-			<Route exact path="/game" render={(view) => <Game handleMode={props.handleMode} />}/>
+			<Route exact path="/game" render={(view) => <Game handleMode={props.handleMode} messages={props.messages} />}/>
 		</BrowserRouter>
 	);
 }

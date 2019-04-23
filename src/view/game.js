@@ -4,6 +4,7 @@ import { calculateWinner, getAIMove, initialGameState } from '../functions';
 import { FormattedMessage } from 'react-intl';
 import { MODE_PRACTICE, MODE_AI_VERSUS, MODE_VERSUS_AI, MIN_COLUMNS, MAX_COLUMNS, SQUARE_WIDTH, DEV_ENV } from '../common';
 import {GameOptions} from "../component/game-options";
+import {MessageData} from "../component/message-data";
 
 function Square(props) {
 	let className = props.className + (props.value ? " " + props.value : "");
@@ -170,28 +171,34 @@ export class Game extends React.Component {
     let redoDisabled = (this.state.stepNumber >= history.length - steps ? 'disabled' : '');
 
     return (
-			<div className="game">
+			<div className="game-view">
+				<div className="game">
 
-				<style>
-					{ `.square { line-height: ${SQUARE_WIDTH}px;	height: ${SQUARE_WIDTH}px;	width: ${SQUARE_WIDTH}px; }` }
-					{ this.state.stepNumber ? ".react-resizable-handle { display: none; }" : "" }
-				</style>
+					<style>
+						{ `.square { line-height: ${SQUARE_WIDTH}px;	height: ${SQUARE_WIDTH}px;	width: ${SQUARE_WIDTH}px; }` }
+						{ this.state.stepNumber ? ".react-resizable-handle { display: none; }" : "" }
+					</style>
 
-				<Board squares={squares} highlite={indexes} cols={cols} resizeBoard={this.resizeBoard} onClick={(i) => this.addMarker(i) } />
+					<Board squares={squares} highlite={indexes} cols={cols} resizeBoard={this.resizeBoard} onClick={(i) => this.addMarker(i) } />
 
-				<div className="game-info">
-					<div className="status">{status}</div>
+					<div className="game-info">
+						<div className="status">{status}</div>
 
-					<div className="undo-redo">
-						<button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - steps)}>
-							<FormattedMessage id="game.undo" defaultMessage="Undo" /></button>
-						<button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + steps)}>
-							<FormattedMessage id="game.redo" defaultMessage="Redo" /></button>
+						<div className="undo-redo">
+							<button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - steps)}>
+								<FormattedMessage id="game.undo" defaultMessage="Undo" /></button>
+							<button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + steps)}>
+								<FormattedMessage id="game.redo" defaultMessage="Redo" /></button>
+						</div>
+
+						<GameOptions action={this.changeMode.bind(this)} />
+
 					</div>
 
-					<GameOptions action={this.changeMode.bind(this)} />
-
 				</div>
+
+				<MessageData nickname={this.state.nickname} messages={this.props.messages} />
+
 			</div>
     );
   }

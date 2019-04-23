@@ -17,8 +17,14 @@ http.listen(port, function(){
 });
 
 io.on('connection', function (socket) {
-	socket.emit('message', { test: 'data' });
+	socket.emit('connection', "opened");
+
 	socket.on('ack', function (data) {
-		console.log(data);
+		io.emit('user-connected', data);
 	});
+
+	socket.on('chat-message', function (msg) {
+		io.emit('chat-message', msg);
+	});
+
 });
