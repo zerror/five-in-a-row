@@ -1,8 +1,10 @@
 import React from "react";
-import { addLocaleData, IntlProvider } from "react-intl";
+import {addLocaleData, FormattedMessage, IntlProvider} from "react-intl";
 import { Router } from "./router"
 import { DocumentTitle } from "./document-title"
 import fiMessages from "../locale/fi";
+import {Header} from "./header";
+import {MODE_NA} from "../common";
 
 let allMessages = { "fi": fiMessages };
 let locale = "en";
@@ -45,11 +47,25 @@ export class IntlProviderWrapper extends React.Component {
   }
 
   render() {
+
+  	let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
+  	let nickname = <FormattedMessage id="game.na" defaultMessage="N/A" />;
+  	let mode = MODE_NA;
+  	if ('gameState' in session && session.gameState.nickname) {
+  		mode = session.gameState.mode;
+  		if ('nickname' in session.gameState && session.gameState.nickname) {
+				nickname = session.gameState.nickname;
+			}
+  	}
+
     return (
       <IntlProvider locale={this.state.locale} messages={this.state.messages} >
         <div className="body-wrapper">
           <DocumentTitle />
-					<Router locale={this.state.locale} handle={this.handle.bind(this)}/>
+
+          <Header nickname={nickname}  mode={mode} locale={this.state.locale} action={this.handle.bind(this)} />
+
+					<Router />
         </div>
       </IntlProvider>
     );

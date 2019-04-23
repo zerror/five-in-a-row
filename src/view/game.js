@@ -3,7 +3,6 @@ import { ResizableBox } from 'react-resizable';
 import { calculateWinner, getAIMove, initialGameState } from '../functions';
 import { FormattedMessage } from 'react-intl';
 import { MODE_PRACTICE, MODE_AI_VERSUS, MODE_VERSUS_AI, MIN_COLUMNS, MAX_COLUMNS, SQUARE_WIDTH, DEV_ENV } from '../common';
-import {Header} from "../component/header";
 import {GameOptions} from "../component/game-options";
 
 function Square(props) {
@@ -63,6 +62,7 @@ export class Game extends React.Component {
     super(props);
 
     this.state = initialGameState(MODE_PRACTICE, MIN_COLUMNS);
+		this.state.nickname = "";
 		this.width = SQUARE_WIDTH * MIN_COLUMNS;
 
     let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
@@ -170,31 +170,27 @@ export class Game extends React.Component {
 		let hideResize = this.state.stepNumber ? ".react-resizable-handle { display: none; }" : "";
 
     return (
-    	<div>
-				<Header nickname={this.state.nickname} locale={this.props.locale} action={this.props.action} mode={this.state.mode} />
+			<div className="game">
 
-				<div className="game">
+				<style>
+					{ `.square { line-height: ${SQUARE_WIDTH}px;	height: ${SQUARE_WIDTH}px;	width: ${SQUARE_WIDTH}px; }` }
+					{ hideResize }
+				</style>
 
-					<style>
-						{ `.square { line-height: ${SQUARE_WIDTH}px;	height: ${SQUARE_WIDTH}px;	width: ${SQUARE_WIDTH}px; }` }
-						{ hideResize }
-					</style>
+				<Board squares={squares} highlite={indexes} cols={cols} resizeBoard={this.resizeBoard} onClick={(i) => this.addMarker(i) } />
 
-					<Board squares={squares} highlite={indexes} cols={cols} resizeBoard={this.resizeBoard} onClick={(i) => this.addMarker(i) } />
+				<div className="game-info">
+					<div className="status">{status}</div>
 
-					<div className="game-info">
-						<div className="status">{status}</div>
-
-						<div className="undo-redo">
-							<button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - steps)}>
-								<FormattedMessage id="game.undo" defaultMessage="Undo" /></button>
-							<button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + steps)}>
-								<FormattedMessage id="game.redo" defaultMessage="Redo" /></button>
-						</div>
-
-						<GameOptions action={this.changeMode.bind(this)} />
-
+					<div className="undo-redo">
+						<button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - steps)}>
+							<FormattedMessage id="game.undo" defaultMessage="Undo" /></button>
+						<button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + steps)}>
+							<FormattedMessage id="game.redo" defaultMessage="Redo" /></button>
 					</div>
+
+					<GameOptions action={this.changeMode.bind(this)} />
+
 				</div>
 			</div>
     );

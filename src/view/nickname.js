@@ -2,9 +2,8 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { MODE_PRACTICE, MIN_COLUMNS } from '../common';
 import { initialGameState } from '../functions';
-import { Header } from "../component/header";
 
-export class Nick extends React.Component {
+export class Nickname extends React.Component {
   constructor(props) {
     super(props);
 
@@ -52,8 +51,6 @@ export class Nick extends React.Component {
   render() {
     return (
 			<div className="main">
-
-				<Header nickname={this.state.nickname} locale={this.props.locale} action={this.props.action} mode={this.state.mode} />
 
 				<h1>
 					<FormattedMessage id="page.title" defaultMessage="Five-in-a-Row" />
