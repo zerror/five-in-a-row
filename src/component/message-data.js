@@ -17,6 +17,9 @@ export class MessageData extends React.Component {
 			socket.removeEventListener('user-connected');
 			socket.on('user-connected', function (data) {
 				$('#messages').append($('<li>').html("<i>" + userConnected + ": " + data.nickname + "</i>"));
+				$('#messages').animate({
+					scrollTop: $('#messages').get(0).scrollHeight
+				}, 1000);
 			});
 		}
 	}
@@ -31,10 +34,16 @@ export class MessageData extends React.Component {
 
 		socket.on('user-connected', function (data) {
 			$('#messages').append($('<li>').html("<i>" + userConnected + ": " + data.nickname + "</i>"));
+			$('#messages').animate({
+				scrollTop: $('#messages').get(0).scrollHeight
+			}, 1000);
 		});
 
 		socket.on('chat-message', function(msg){
 			$('#messages').append($('<li>').html(msg));
+			$('#messages').animate({
+				scrollTop: $('#messages').get(0).scrollHeight
+			}, 1000);
 		});
 
 		$(function () {
