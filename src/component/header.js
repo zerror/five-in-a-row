@@ -1,5 +1,6 @@
 import {FormattedMessage} from "react-intl";
 import React from "react";
+import {GameOptions} from "./game-options";
 
 const modes = [
 	<FormattedMessage id="game.na" defaultMessage="N/A" />,
@@ -36,7 +37,8 @@ export class Header extends React.Component {
 						{this.props.locale === "en" ? "EN" : <a href="/" onClick={(e) => this.changeLang(e, "en")}>EN</a>}
 					</div>
 
-					<div className="mode-label"><FormattedMessage id="game.mode" defaultMessage="Mode"/>: {modes[this.props.mode]}
+					<div className="mode-label">
+						<FormattedMessage id="game.mode" defaultMessage="Mode"/>: {modes[this.props.mode]} <GameOptions action={this.props.handleMode} />
 					</div>
 
 					<div className="readme-link">

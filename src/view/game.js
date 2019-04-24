@@ -3,7 +3,6 @@ import { ResizableBox } from 'react-resizable';
 import { calculateWinner, getAIMove, initialGameState } from '../functions';
 import { FormattedMessage } from 'react-intl';
 import { MODE_PRACTICE, MODE_AI_VERSUS, MODE_VERSUS_AI, MIN_COLUMNS, MAX_COLUMNS, SQUARE_WIDTH, DEV_ENV } from '../common';
-import {GameOptions} from "../component/game-options";
 import {MessageData} from "../component/message-data";
 
 function Square(props) {
@@ -65,17 +64,21 @@ export class Game extends React.Component {
     this.state = initialGameState(MODE_PRACTICE, MIN_COLUMNS);
 		this.width = SQUARE_WIDTH * MIN_COLUMNS;
 
-    let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
-    if ('gameState' in session) {
-      this.state = session.gameState;
-      this.width = SQUARE_WIDTH * this.state.cols;
-    }
-
     this.resizeBoard = this.resizeBoard.bind(this);
   }
 
   componentDidMount() {
     window.addEventListener("beforeunload", this.saveGameStateToSessionStorage.bind(this) );
+
+    let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
+    if ('gameState' in session) {
+      this.setState(session.gameState, function () {
+				this.width = SQUARE_WIDTH * this.state.cols;
+				if (this.state.stepNumber === 0 && this.props.mode === MODE_AI_VERSUS) {
+					this.changeMode(this.props.mode);
+				}
+			});
+    }
   }
 
   componentWillUnmount() {
@@ -83,7 +86,13 @@ export class Game extends React.Component {
     this.saveGameStateToSessionStorage();
   }
 
-  saveGameStateToSessionStorage() {
+  componentWillReceiveProps(nextProps, nextContext) {
+  	if (this.props.mode !== nextProps.mode) {
+  		this.changeMode(nextProps.mode);
+  	}
+	}
+
+	saveGameStateToSessionStorage() {
     let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
     session.gameState = this.state;
     localStorage.setItem('5R-SessionData', JSON.stringify(session));
@@ -120,11 +129,11 @@ export class Game extends React.Component {
       xIsNext: !this.state.xIsNext,
       stepNumber: history.length,
     }, function () {
-			if (this.state.mode === MODE_VERSUS_AI && playerMove) {
+			if (this.props.mode === MODE_VERSUS_AI && playerMove) {
 				let move = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
 				this.addMarker(move, false);
 
-			} else if (this.state.mode === MODE_AI_VERSUS && playerMove) {
+			} else if (this.props.mode === MODE_AI_VERSUS && playerMove) {
     		let move = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
 				this.addMarker(move, false);
 			}
@@ -132,7 +141,7 @@ export class Game extends React.Component {
   }
 
   jumpTo(step) {
-  	if (this.state.mode === MODE_PRACTICE) {
+  	if (this.props.mode === MODE_PRACTICE) {
   		this.setState({ xIsNext: !this.state.xIsNext });
   	}
     this.setState({ stepNumber: step });
@@ -145,7 +154,6 @@ export class Game extends React.Component {
 		session.gameState.nickname = nickname;
 
     this.setState(session.gameState, function () {
-    	this.props.handleMode(mode);
     	if (mode === MODE_AI_VERSUS) {
     		const squares = this.state.history[0].squares.slice();
     		let move = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
@@ -166,7 +174,7 @@ export class Game extends React.Component {
 		  status = <strong><FormattedMessage id="game.winner" defaultMessage="Winner: {player}" values={{ player: winner }}/></strong>;
     }
 
-		let steps = (this.state.mode === MODE_PRACTICE ? 1 : 2);
+		let steps = (this.props.mode === MODE_PRACTICE ? 1 : 2);
     let undoDisabled = (this.state.stepNumber - steps < 0 ? 'disabled' : '');
     let redoDisabled = (this.state.stepNumber >= history.length - steps ? 'disabled' : '');
 
@@ -191,13 +199,11 @@ export class Game extends React.Component {
 								<FormattedMessage id="game.redo" defaultMessage="Redo" /></button>
 						</div>
 
-						<GameOptions action={this.changeMode.bind(this)} />
+						<div className="message-box"></div>
 
 					</div>
-
+					<MessageData nickname={this.state.nickname} messages={this.props.messages} />
 				</div>
-
-				<MessageData nickname={this.state.nickname} messages={this.props.messages} />
 
 			</div>
     );

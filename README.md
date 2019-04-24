@@ -13,6 +13,7 @@ Game currently has following features
 * simple AI opponent
 * supports two languages (fi/en)
 * remembers state of the board 
+* simple chat message functionality
 
 Note: UI was not the focus of this implementation. 
 
@@ -89,6 +90,8 @@ Here are the answers to the question what technologies were used?
 > Game state is stored to _Local Storage_.
 >
 > **Socket.io** is used to emit messages from server to client.
+>
+> As well as small bits of **JQuery** are used to make life easier.
 >
 > Code itself is stored in git and it is server by Heroku. 
 >

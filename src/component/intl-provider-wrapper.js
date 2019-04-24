@@ -86,9 +86,9 @@ export class IntlProviderWrapper extends React.Component {
         <div className="body-wrapper">
           <DocumentTitle />
 
-          <Header nickname={this.state.nickname}  mode={this.state.mode} locale={this.state.locale} action={this.setLocale.bind(this)} />
+          <Header nickname={this.state.nickname} mode={this.state.mode} locale={this.state.locale} action={this.setLocale.bind(this)} handleMode={this.setMode} />
 
-					<Router handleNickname={this.setNickname} handleMode={this.setMode} messages={this.state.messages}/>
+					<Router mode={this.state.mode} handleNickname={this.setNickname} messages={this.state.messages}/>
         </div>
       </IntlProvider>
     );

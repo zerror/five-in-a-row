@@ -52,7 +52,12 @@ ol, ul {
   margin: 20px;
 }
 .game-button {
-  margin: 40px 5px 0 0;
+  margin-top: -2px;
+}
+.game-options {
+	float: right;
+	margin-left: 1em;
+	vertical-align: top;
 }
 .back-button {
 	margin-top: -2px;
@@ -95,27 +100,35 @@ ol, ul {
 
 form {
 	background: #000;
-	padding: 2px;
-	position: fixed;
+	padding: 1px;
 	bottom: 0;
-	width: 100%;
+	width: 418px;
 }
 form input {
 	border: 0;
-	padding: 10px 0 10px 6px;
-	width: 90%;
-	margin-right: 2px;
+	padding: 8px 0 8px 4px;
+	width: 358px;
+	margin-right: 1px;
 }
 form button {
-	width: 9%;
+	width: 55px;
 	background: rgb(229, 237, 255);
 	border: none;
-	padding: 10px;
+	padding: 8px;
 }
 #messages {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
+	height: 460px;
+  overflow: overlay;
 }
-#messages li { padding: 5px 10px; }
-#messages li:nth-child(odd) { background: #eee; }
+#messages li {
+	padding: 5px 10px;
+}
+#messages li:nth-child(odd) {
+	background: #eee;
+}
+.message-data {
+	width: 420px;
+}
