@@ -58,8 +58,8 @@ ol, ul {
   margin-top: -2px;
 }
 .game-options {
-	float: right;
-	margin-left: 1em;
+	float: left;
+  margin-right: 1em;
 	vertical-align: top;
 }
 .back-button {
