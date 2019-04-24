@@ -51,6 +51,10 @@ export class MessageData extends React.Component {
 		return (
 			<div className="message-data">
 
+				<style>
+					{ "#messages { height: " + (this.props.cols * 33 - 34) + "px; }" }
+				</style>
+
 				<ul id="messages"></ul>
 
 				<form action="">

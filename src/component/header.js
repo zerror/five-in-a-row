@@ -22,7 +22,7 @@ export class Header extends React.Component {
 
 	render() {
 		return (
-				<div className="game-info">
+				<div className="header">
 
 					<div className="player-nick">
 						<FormattedMessage id="game.player" defaultMessage="Player"/>:&nbsp;

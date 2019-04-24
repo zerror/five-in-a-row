@@ -64,21 +64,21 @@ export class Game extends React.Component {
     this.state = initialGameState(MODE_PRACTICE, MIN_COLUMNS);
 		this.width = SQUARE_WIDTH * MIN_COLUMNS;
 
+    let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
+    if ('gameState' in session) {
+      this.state = session.gameState;
+			this.width = SQUARE_WIDTH * this.state.cols;
+    }
+
     this.resizeBoard = this.resizeBoard.bind(this);
   }
 
   componentDidMount() {
     window.addEventListener("beforeunload", this.saveGameStateToSessionStorage.bind(this) );
 
-    let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
-    if ('gameState' in session) {
-      this.setState(session.gameState, function () {
-				this.width = SQUARE_WIDTH * this.state.cols;
-				if (this.state.stepNumber === 0 && this.props.mode === MODE_AI_VERSUS) {
-					this.changeMode(this.props.mode);
-				}
-			});
-    }
+		if (this.state.stepNumber === 0 && this.props.mode === MODE_AI_VERSUS) {
+			this.changeMode(this.props.mode);
+		}
   }
 
   componentWillUnmount() {
@@ -189,20 +189,18 @@ export class Game extends React.Component {
 
 					<Board squares={squares} highlite={indexes} cols={cols} resizeBoard={this.resizeBoard} onClick={(i) => this.addMarker(i) } />
 
-					<div className="game-info">
-						<div className="status">{status}</div>
+					<MessageData nickname={this.state.nickname} messages={this.props.messages} cols={this.state.cols} />
+				</div>
 
-						<div className="undo-redo">
-							<button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - steps)}>
-								<FormattedMessage id="game.undo" defaultMessage="Undo" /></button>
-							<button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + steps)}>
-								<FormattedMessage id="game.redo" defaultMessage="Redo" /></button>
-						</div>
+				<div className="game-info">
+					<div className="status">{status}</div>
 
-						<div className="message-box"></div>
-
+					<div className="undo-redo">
+						<button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - steps)}>
+							<FormattedMessage id="game.undo" defaultMessage="Undo" /></button>
+						<button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + steps)}>
+							<FormattedMessage id="game.redo" defaultMessage="Redo" /></button>
 					</div>
-					<MessageData nickname={this.state.nickname} messages={this.props.messages} />
 				</div>
 
 			</div>
