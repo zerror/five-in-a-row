@@ -61,7 +61,7 @@ export function calculateWinner(squares, cols) {
   return { winner: null, indexes: [] };
 }
 
-function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
+function scoreMove(index, squares, cols, stepNumber, mark, hFactor = 1, slide = 0) {
 
 	let optionsForward = 0;
 	let ownForward = 0;
@@ -134,9 +134,16 @@ function scoreMove(index, squares, cols, mark, hFactor = 1, slide = 0) {
 	}
 
 	if (optionsBackward + optionsForward >= 4 || opponentInARowForward + opponentInARowBackward >= 3) {
-
-		if (optionsForward >= (cols / 2) - 1 && optionsBackward >= (cols / 2) - 1) {
-			score += 1;
+		if (stepNumber < 4) {
+			if (optionsForward >= (cols / 2) - 1 && optionsBackward >= (cols / 2) - 1) {
+				score += 1;
+			}
+			if (opponentInARowForward && optionsBackward >= (cols / 2) - 1) {
+				score += 2;
+			}
+			if (opponentInARowBackward && optionsForward >= (cols / 2) - 1) {
+				score += 2;
+			}
 		}
 
 		if (ownInARowForward && optionsForward > ownInARowForward) {
@@ -276,10 +283,10 @@ export function getAIMove(state, squares, cols, depth = 0) {
 		squares[i] = thisMark;
 
 		thisScore = -100;
-		thisScore += scoreMove(i, squares, cols, thisMark, 1, 0);
-		thisScore += scoreMove(i, squares, cols, thisMark, cols, 0);
-		thisScore += scoreMove(i, squares, cols, thisMark, cols, 1);
-		thisScore += scoreMove(i, squares, cols, thisMark, cols, -1);
+		thisScore += scoreMove(i, squares, cols, thisStep, thisMark, 1, 0);
+		thisScore += scoreMove(i, squares, cols, thisStep, thisMark, cols, 0);
+		thisScore += scoreMove(i, squares, cols, thisStep, thisMark, cols, 1);
+		thisScore += scoreMove(i, squares, cols, thisStep, thisMark, cols, -1);
 
 		// if (depth < 1) {
 		// 	let move = getAIMove(state, squares, cols, depth + 1);
