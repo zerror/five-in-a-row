@@ -197,9 +197,11 @@ export class Game extends React.Component {
 
 					<div className="undo-redo">
 						<button disabled={undoDisabled} onClick={() => this.jumpTo(this.state.stepNumber - steps)}>
-							<FormattedMessage id="game.undo" defaultMessage="Undo" /></button>
+							<FormattedMessage id="game.undo" defaultMessage="Undo" />
+						</button>
 						<button disabled={redoDisabled} onClick={() => this.jumpTo(this.state.stepNumber + steps)}>
-							<FormattedMessage id="game.redo" defaultMessage="Redo" /></button>
+							<FormattedMessage id="game.redo" defaultMessage="Redo" />
+						</button>
 					</div>
 				</div>
 

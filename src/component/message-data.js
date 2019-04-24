@@ -1,5 +1,6 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
+import {FormattedMessage} from "react-intl";
 
 let host = null;
 if (process.env.NODE_ENV === 'development') {
@@ -68,7 +69,7 @@ export class MessageData extends React.Component {
 
 				<form action="">
 					<input id="message-input" autoComplete="off"/>
-					<button>Send</button>
+					<button><FormattedMessage id="button.send" defaultMessage="Send" /></button>
 				</form>
 
 			</div>
