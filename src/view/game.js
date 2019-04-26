@@ -3,59 +3,8 @@ import { ResizableBox } from 'react-resizable';
 import { calculateWinner, getAIMove, initialGameState } from '../functions';
 import { FormattedMessage } from 'react-intl';
 import { MODE_PRACTICE, MODE_AI_VERSUS, MODE_VERSUS_AI, MIN_COLUMNS, MAX_COLUMNS, SQUARE_WIDTH, DEV_ENV } from '../common';
-import {MessageData} from "../component/message-data";
+import { MessageData } from "../component/message-data";
 
-function Square(props) {
-	let className = props.className + (props.value ? " " + props.value : "");
-	let title = (DEV_ENV ? props.index : '');
-
-	return (
-		<button className={className} onClick={props.onClick} title={title}>
-			{props.value}
-		</button>
-	);
-}
-
-class Board extends React.Component {
-	constructor(props) {
-		super(props);
-		this.resizeBoard = this.props.resizeBoard.bind(this);
-	}
-
-  renderSquare(i, className) {
-    return <Square key={i} index={i} value={this.props.squares[i]} className={className} onClick={() => this.props.onClick(i)} />;
-  }
-
-	render() {
-		let rows = [];
-		for (let i = 0; i < this.props.cols; i++) {
-			let cells = [];
-			for (let j = 0; j < this.props.cols; j++) {
-				let index = i * this.props.cols + j;
-				let className = "square";
-				if (this.props.highlite.indexOf(index) >= 0) {
-					className += " highlite-square";
-				}
-				cells.push(this.renderSquare(index, className));
-			}
-			rows.push(<div className="board-row" key={i} > {cells} </div>);
-		}
-
-		const minSize = SQUARE_WIDTH * MIN_COLUMNS;
-		const maxSize = SQUARE_WIDTH * MAX_COLUMNS;
-
-		return (
-				<ResizableBox
-					onResize={this.resizeBoard}
-					lockAspectRatio={true}
-					width={SQUARE_WIDTH * this.props.cols}
-					height={SQUARE_WIDTH * this.props.cols}
-					minConstraints={[minSize, minSize]}
-					maxConstraints={[maxSize, maxSize]}
-					className="board">{rows}</ResizableBox>
-		);
-  }
-}
 
 export class Game extends React.Component {
   constructor(props) {
@@ -87,7 +36,7 @@ export class Game extends React.Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-  	if (this.props.mode !== nextProps.mode) {
+  	if (this.props.mode !== nextProps.mode || this.props.id !== nextProps.id) {
   		this.changeMode(nextProps.mode);
   	}
 	}
@@ -148,12 +97,8 @@ export class Game extends React.Component {
   }
 
   changeMode(mode) {
-		let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
-		let nickname = session.gameState.nickname;
-		session.gameState = initialGameState(mode, session.gameState.cols);
-		session.gameState.nickname = nickname;
-
-    this.setState(session.gameState, function () {
+		let gameState = initialGameState(mode, this.state.cols, this.state.nickname);
+    this.setState(gameState, function () {
     	if (mode === MODE_AI_VERSUS) {
     		const squares = this.state.history[0].squares.slice();
     		let move = getAIMove(Object.assign({}, this.state), squares.slice(), this.state.cols);
@@ -210,4 +155,54 @@ export class Game extends React.Component {
   }
 }
 
+function Square(props) {
+	let className = props.className + (props.value ? " " + props.value : "");
+	let title = (DEV_ENV ? props.index : '');
 
+	return (
+		<button className={className} onClick={props.onClick} title={title}>
+			{props.value}
+		</button>
+	);
+}
+
+class Board extends React.Component {
+	constructor(props) {
+		super(props);
+		this.resizeBoard = this.props.resizeBoard.bind(this);
+	}
+
+  renderSquare(i, className) {
+    return <Square key={i} index={i} value={this.props.squares[i]} className={className} onClick={() => this.props.onClick(i)} />;
+  }
+
+	render() {
+		let rows = [];
+		for (let i = 0; i < this.props.cols; i++) {
+			let cells = [];
+			for (let j = 0; j < this.props.cols; j++) {
+				let index = i * this.props.cols + j;
+				let className = "square";
+				if (this.props.highlite.indexOf(index) >= 0) {
+					className += " highlite-square";
+				}
+				cells.push(this.renderSquare(index, className));
+			}
+			rows.push(<div className="board-row" key={i} > {cells} </div>);
+		}
+
+		const minSize = SQUARE_WIDTH * MIN_COLUMNS;
+		const maxSize = SQUARE_WIDTH * MAX_COLUMNS;
+
+		return (
+				<ResizableBox
+					onResize={this.resizeBoard}
+					lockAspectRatio={true}
+					width={SQUARE_WIDTH * this.props.cols}
+					height={SQUARE_WIDTH * this.props.cols}
+					minConstraints={[minSize, minSize]}
+					maxConstraints={[maxSize, maxSize]}
+					className="board">{rows}</ResizableBox>
+		);
+  }
+}
