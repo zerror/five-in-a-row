@@ -2,14 +2,14 @@ import { MODE_AI_VERSUS, DEV_ENV } from "./common";
 
 /*** Functions.js ***/
 
-export function initialGameState(mode, columns) {
+export function initialGameState(mode, columns, nickname = "") {
 	return {
 		history: [{ squares: Array(columns * columns).fill(null) }],
 		cols: columns,
 		xIsNext: (mode === MODE_AI_VERSUS ? false : true),
 		stepNumber: 0,
 		mode: mode,
-		nickname: ""
+		nickname: nickname
 	};
 }
 

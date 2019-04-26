@@ -1,6 +1,6 @@
-import {FormattedMessage} from "react-intl";
+import { FormattedMessage } from "react-intl";
 import React from "react";
-import {GameOptions} from "./game-options";
+import { GameOptions } from "./game-options";
 
 const modes = [
 	<FormattedMessage id="game.na" defaultMessage="N/A" />,

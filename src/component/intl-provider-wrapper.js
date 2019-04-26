@@ -1,11 +1,14 @@
 import React from "react";
-import {addLocaleData, IntlProvider} from "react-intl";
+import { addLocaleData, IntlProvider } from "react-intl";
 import { Router } from "./router"
 import { DocumentTitle } from "./document-title"
+import { Header } from "./header";
+import { MIN_COLUMNS, MODE_NA, MODE_PRACTICE } from "../common";
+import { initialGameState } from "../functions";
+import {connect, ReactReduxContext} from "react-redux"
+import { modeUpdate } from "../reducers";
+
 import fiMessages from "../locale/fi";
-import {Header} from "./header";
-import {MIN_COLUMNS, MODE_NA, MODE_PRACTICE} from "../common";
-import {initialGameState} from "../functions";
 
 let allMessages = { "fi": fiMessages };
 
@@ -23,7 +26,6 @@ export class IntlProviderWrapper extends React.Component {
 		let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
 		if (!session) {
 			session.locale = this.state.locale;
-			localStorage.setItem('5R-SessionData', JSON.stringify(session));
 		} else if ('locale' in session) {
 			this.state.locale = session.locale;
 			this.state.messages = (allMessages[this.state.locale] ? allMessages[this.state.locale] : {});
@@ -38,9 +40,6 @@ export class IntlProviderWrapper extends React.Component {
   		if ('nickname' in session.gameState && session.gameState.nickname) {
 				this.state.nickname = session.gameState.nickname;
 			}
-  	} else {
-  		session.gameState = initialGameState(MODE_PRACTICE, MIN_COLUMNS);
-  		localStorage.setItem('5R-SessionData', JSON.stringify(session));
   	}
 
   	this.setMode = this.setMode.bind(this);
@@ -67,17 +66,20 @@ export class IntlProviderWrapper extends React.Component {
       nickname: nickname
     });
     let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
+    if ('gameState' in session === false) {
+  		session.gameState = initialGameState(MODE_PRACTICE, MIN_COLUMNS);
+  	}
     session.gameState.nickname = nickname;
   	localStorage.setItem('5R-SessionData', JSON.stringify(session));
   }
 
   setMode(mode) {
+  	let modeReset = (mode === this.state.mode);
+  	this.context.store.dispatch(modeUpdate(mode, modeReset));
+
     this.setState({
       mode: mode
     });
-    let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
-    session.gameState.mode = mode;
-  	localStorage.setItem('5R-SessionData', JSON.stringify(session));
   }
 
   render() {
@@ -90,11 +92,19 @@ export class IntlProviderWrapper extends React.Component {
         <div className="body-wrapper">
           <DocumentTitle />
 
-          <Header nickname={nickname} mode={mode} locale={locale} action={this.setLocale.bind(this)} handleMode={this.setMode} />
+          <ConnectedHeader nickname={nickname} locale={locale} action={this.setLocale.bind(this)} handleMode={this.setMode} />
 
-					<Router mode={this.state.mode} handleNickname={this.setNickname} messages={this.state.messages}/>
+					<Router handleNickname={this.setNickname} messages={this.state.messages}/>
         </div>
       </IntlProvider>
     );
   }
 }
+
+IntlProviderWrapper.contextType = ReactReduxContext;
+
+function mapGameStateToProps(state) {
+	return state.game;
+}
+
+const ConnectedHeader = connect(mapGameStateToProps)(Header);
