@@ -1,6 +1,6 @@
 {
   "name": "five-x-in-a-row.herokuapp.com",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
     "eslint-plugin-flowtype": "npm run 2.50.3",
