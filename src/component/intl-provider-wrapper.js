@@ -94,7 +94,6 @@ export class IntlProviderWrapper extends React.Component {
   }
 
   render() {
-  	let nickname = this.state.nickname;
   	let locale = this.state.locale;
 
     return (
