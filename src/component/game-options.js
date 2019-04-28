@@ -1,6 +1,6 @@
 import {FormattedMessage} from "react-intl";
 import React from "react";
-import {MODE_AI_VERSUS, MODE_PRACTICE, MODE_VERSUS_AI} from "../common";
+import { MODE_AI_VERSUS, MODE_PRACTICE, MODE_VERSUS_AI } from "../common";
 
 export class GameOptions extends React.Component {
 

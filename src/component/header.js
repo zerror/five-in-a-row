@@ -42,14 +42,6 @@ export class Header extends React.Component {
 						<ConnectedGameOptions action={this.props.handleMode} /> <FormattedMessage id="game.mode" defaultMessage="Mode"/>: {modes[this.props.mode]}
 					</div>
 
-					<div className="readme-link">
-						<FormattedMessage id="page.here_you_can_find" defaultMessage="Here you can find: "/>
-						<a href="https://github.com/zerror/five-in-a-row/blob/master/README.md" target="_blank"
-							 rel="noopener noreferrer">
-							<FormattedMessage id="page.readme_link" defaultMessage="README!"/>
-						</a>
-					</div>
-
 					<FormattedMessage id="button.back" defaultMessage="Back">
 						{text => <input className="back-button" disabled={document.location.pathname === "/" ? "disabled" : ""} type="button" onClick={this.goBack} value={text} />}
 					</FormattedMessage>

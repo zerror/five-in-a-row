@@ -7,8 +7,8 @@
   "placeholder.user_connected": "Käyttäjä liittyi",
 
   "button.send": "Lähetä",
-  "button.back": "Takaisin",
-  "button.use_nickname": "Käytä",
+  "button.back": "Alkuun",
+  "button.start_game": "Aloita peli",
   "button.remove_nickname": "Poista",
   "button.practice_game": "Harjoitus",
   "button.vs_ai": "Vs. Tekoäly",

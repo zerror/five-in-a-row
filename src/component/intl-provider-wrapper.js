@@ -6,7 +6,7 @@ import { Header } from "./header";
 import { MIN_COLUMNS, MODE_NA, MODE_PRACTICE } from "../common";
 import { initialGameState } from "../functions";
 import { connect, ReactReduxContext } from "react-redux"
-import { modeUpdate } from "../reducers";
+import { gameUpdate } from "../reducers";
 
 import fiMessages from "../locale/fi";
 
@@ -40,46 +40,57 @@ export class IntlProviderWrapper extends React.Component {
   		if ('nickname' in session.gameState && session.gameState.nickname) {
 				this.state.nickname = session.gameState.nickname;
 			}
+  	} else {
+  		session.gameState = initialGameState(MODE_PRACTICE, MIN_COLUMNS, this.state.nickname);
   	}
 
   	this.setMode = this.setMode.bind(this);
   	this.setNickname = this.setNickname.bind(this);
   }
 
-  setLocale(locale) {
+  componentDidMount() {
+  	this.context.store.dispatch(gameUpdate(this.state));
+	}
+
+	saveGameStateToSessionStorage() {
+    let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
+    session.locale = this.state.locale;
+    session.gameState.nickname = this.state.nickname;
+    session.gameState.mode = this.state.mode;
+    localStorage.setItem('5R-SessionData', JSON.stringify(session));
+  }
+
+	setLocale(locale) {
     let messages = allMessages[locale] ? allMessages[locale] : {};
+    let localeData = require('react-intl/locale-data/' + locale);
+		addLocaleData(localeData);
+
 		this.setState({
       locale: locale,
       messages: messages
-    });
-
-    let localeData = require('react-intl/locale-data/' + locale);
-    addLocaleData(localeData);
-
-    let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
-  	session.locale = locale;
-    localStorage.setItem('5R-SessionData', JSON.stringify(session));
+    }, function () {
+			this.saveGameStateToSessionStorage();
+		});
   }
 
   setNickname(nickname) {
     this.setState({
       nickname: nickname
-    });
-    let session = JSON.parse(localStorage.getItem('5R-SessionData') || "{}");
-    if ('gameState' in session === false) {
-  		session.gameState = initialGameState(MODE_PRACTICE, MIN_COLUMNS);
-  	}
-    session.gameState.nickname = nickname;
-  	localStorage.setItem('5R-SessionData', JSON.stringify(session));
+    }, function () {
+			this.context.store.dispatch(gameUpdate(this.state));
+			this.saveGameStateToSessionStorage();
+		});
   }
 
   setMode(mode) {
   	let modeReset = (mode === this.state.mode);
-  	this.context.store.dispatch(modeUpdate(mode, modeReset));
 
     this.setState({
       mode: mode
-    });
+    }, function () {
+			this.context.store.dispatch(gameUpdate(this.state, modeReset));
+			this.saveGameStateToSessionStorage();
+		});
   }
 
   render() {
@@ -91,7 +102,7 @@ export class IntlProviderWrapper extends React.Component {
         <div className="body-wrapper">
           <DocumentTitle />
 
-          <ConnectedHeader nickname={nickname} locale={locale} action={this.setLocale.bind(this)} handleMode={this.setMode} />
+          <ConnectedHeader locale={locale} action={this.setLocale.bind(this)} handleMode={this.setMode} />
 
 					<Router handleNickname={this.setNickname} messages={this.state.messages}/>
         </div>
@@ -102,8 +113,12 @@ export class IntlProviderWrapper extends React.Component {
 
 IntlProviderWrapper.contextType = ReactReduxContext;
 
+let gameNumber = 0;
+
 function mapGameStateToProps(state) {
-	return state.game;
+	gameNumber += 1;
+	state.game.id = gameNumber;
+  return state.game;
 }
 
 const ConnectedHeader = connect(mapGameStateToProps)(Header);

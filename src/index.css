@@ -54,33 +54,25 @@ ol, ul {
 .game-info {
   margin: 0 20px;
 }
-.game-button, button {
-  margin-top: -2px;
-}
 .game-options {
 	float: left;
   margin-right: 1em;
 	vertical-align: top;
 }
-.back-button {
-	margin-top: -2px;
+.game-button, .back-button, button {
+  margin-top: -2px;
+}
+.start-game-button {
+	margin-top: 3em;
+	margin-bottom: 3em;
 }
 
-.player-nick {
-  margin: 0px 20px 0px 0;
-	float: left;
-}
-.mode-label {
-  margin: 0px 20px 0px 0;
-	float: left;
-}
-.lang-selector {
+.player-nick, .mode-label, .lang-selector {
   margin: 0px 20px 0 0;
   float: left;
 }
 .readme-link {
   margin: 0px 20px 0 0;
-  float: left;
 }
 
 .board.react-resizable {
@@ -125,7 +117,6 @@ form button {
 	margin: 0;
 	padding: 0;
 	min-height: 460px;
-	/*overflow: overlay;*/
 	overflow-y: scroll;
 }
 #messages li {

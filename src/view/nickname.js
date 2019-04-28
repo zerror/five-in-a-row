@@ -54,7 +54,7 @@ export class Nickname extends React.Component {
 					<FormattedMessage id="page.title" defaultMessage="Five-in-a-Row" />
 				</h1>
 
-				<FormattedMessage id="game.start_the" defaultMessage="Start the game by selecting a nickname!" />
+				<p><FormattedMessage id="game.start_the" defaultMessage="Start the game by selecting a nickname!" /></p>
 
 				<div className="set-nickname">
 
@@ -62,14 +62,22 @@ export class Nickname extends React.Component {
 						{text => <input className="nickname" onChange={(event)=>this.saveNickname(event)} value={this.state.nickname} type="text" placeholder={text} />}
 					</FormattedMessage>
 
-					<FormattedMessage id="button.use_nickname" defaultMessage="Use">
-						{text => <input className="game-button" disabled={!this.state.nickname ? "disabled" : ""} type="button" onClick={() => this.useNickname()} value={text} />}
-					</FormattedMessage>
-
 					<FormattedMessage id="button.remove_nickname" defaultMessage="Remove">
 						{text => <input className="game-button" disabled={!this.state.nickname ? "disabled" : ""} type="reset" onClick={() => this.removeNickname()} value={text} />}
 					</FormattedMessage>
 
+				</div>
+
+				<FormattedMessage id="button.start_game" defaultMessage="Start game">
+					{text => <input className="start-game-button" disabled={!this.state.nickname ? "disabled" : ""} type="button" onClick={() => this.useNickname()} value={text} />}
+				</FormattedMessage>
+
+				<div className="readme-link">
+					<FormattedMessage id="page.here_you_can_find" defaultMessage="Here you can find: "/>
+					<a href="https://github.com/zerror/five-in-a-row/blob/master/README.md" target="_blank"
+						 rel="noopener noreferrer">
+						<FormattedMessage id="page.readme_link" defaultMessage="README!"/>
+					</a>
 				</div>
 
 			</div>

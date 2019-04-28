@@ -1,6 +1,6 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
-import {FormattedMessage} from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 let host = null;
 if (process.env.NODE_ENV === 'development') {
@@ -16,6 +16,7 @@ export class MessageData extends React.Component {
 		if (this.props.messages !== nextProps.messages) {
 			const userConnected = nextProps.messages["placeholder.user_connected"] || "user connected";
 			socket.removeEventListener('user-connected');
+
 			socket.on('user-connected', function (data) {
 				$('#messages').append($('<li>').html("<i>" + userConnected + ": " + data.nickname + "</i>"));
 				$('#messages').animate({

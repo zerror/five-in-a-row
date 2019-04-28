@@ -14,11 +14,7 @@ export function Router(props) {
 	);
 }
 
-let gameNumber = 0;
-
 function mapGameStateToProps(state) {
-	gameNumber += 1;
-	state.game.id = gameNumber;
   return state.game;
 }
 

@@ -8,13 +8,14 @@ const MODE_RESET = "MODE_RESET";
 
 /*** action creators ***/
 
-export function modeUpdate(mode, modeReset = false) {
-	return { type: (modeReset ? MODE_RESET : MODE_CHANGE), mode }
+export function gameUpdate(state, modeReset = false) {
+	let type = (modeReset ? MODE_RESET : MODE_CHANGE);
+	return { type: type, mode: state.mode, nickname: state.nickname }
 }
 
 /*** reducers ***/
 
-function game(state = { mode: MODE_PRACTICE }, action) {
+function game(state = { mode: MODE_PRACTICE, nickname: "" }, action) {
   switch (action.type) {
     case MODE_CHANGE:
   		return action;
