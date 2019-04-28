@@ -1,6 +1,10 @@
 import { FormattedMessage } from "react-intl";
 import React from "react";
 import { GameOptions } from "./game-options";
+import { ReactReduxContext } from "react-redux";
+// import { IntlProviderWrapper } from "./intl-provider-wrapper";
+// import {initialGameState} from "../functions";
+import { MODE_PRACTICE } from "../common";
 
 const modes = [
 	<FormattedMessage id="game.na" defaultMessage="N/A" />,
@@ -11,7 +15,27 @@ const modes = [
 
 export class Header extends React.Component {
 
-  changeLang(e, lang) {
+	constructor(props) {
+    super(props);
+    this.state = { mode: MODE_PRACTICE };
+  }
+
+	componentDidMount() {
+		let store = this.context.store;
+		let state = store.getState().game;
+		let component = this;
+
+    this.setState(state);
+
+		function updateState() {
+			let state = store.getState().game;
+			component.setState(state);
+		}
+
+		this.context.store.subscribe(updateState);
+	}
+
+	changeLang(e, lang) {
     e.preventDefault();
     this.props.action(lang);
   }
@@ -38,7 +62,7 @@ export class Header extends React.Component {
 					</div>
 
 					<div className="mode-label">
-						<GameOptions action={this.props.handleMode} /> <FormattedMessage id="game.mode" defaultMessage="Mode"/>: {modes[this.props.mode]}
+						<GameOptions action={this.props.handleMode} /> <FormattedMessage id="game.mode" defaultMessage="Mode"/>: {modes[this.state.mode]}
 					</div>
 
 					<div className="readme-link">
@@ -57,3 +81,5 @@ export class Header extends React.Component {
 		);
 	}
 }
+
+Header.contextType = ReactReduxContext;

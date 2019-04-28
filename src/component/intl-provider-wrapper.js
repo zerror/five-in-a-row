@@ -5,7 +5,7 @@ import { DocumentTitle } from "./document-title"
 import { Header } from "./header";
 import { MIN_COLUMNS, MODE_NA, MODE_PRACTICE } from "../common";
 import { initialGameState } from "../functions";
-import {connect, ReactReduxContext} from "react-redux"
+import { ReactReduxContext } from "react-redux"
 import { modeUpdate } from "../reducers";
 
 import fiMessages from "../locale/fi";
@@ -91,7 +91,7 @@ export class IntlProviderWrapper extends React.Component {
         <div className="body-wrapper">
           <DocumentTitle />
 
-          <ConnectedHeader nickname={nickname} locale={locale} action={this.setLocale.bind(this)} handleMode={this.setMode} />
+          <Header nickname={nickname} locale={locale} action={this.setLocale.bind(this)} handleMode={this.setMode} />
 
 					<Router handleNickname={this.setNickname} messages={this.state.messages}/>
         </div>
@@ -102,8 +102,8 @@ export class IntlProviderWrapper extends React.Component {
 
 IntlProviderWrapper.contextType = ReactReduxContext;
 
-function mapGameStateToProps(state) {
-	return state.game;
-}
-
-const ConnectedHeader = connect(mapGameStateToProps)(Header);
+// function mapGameStateToProps(state) {
+// 	return state.game;
+// }
+//
+// const ConnectedHeader = connect(mapGameStateToProps)(Header);
