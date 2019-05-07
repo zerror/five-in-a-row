@@ -72,13 +72,13 @@ export class Nickname extends React.Component {
 					{text => <input className="start-game-button" disabled={!this.state.nickname ? "disabled" : ""} type="button" onClick={() => this.useNickname()} value={text} />}
 				</FormattedMessage>
 
-				<div className="readme-link">
-					<FormattedMessage id="page.here_you_can_find" defaultMessage="Here you can find: "/>
-					<a href="https://github.com/zerror/five-in-a-row/blob/master/README.md" target="_blank"
-						 rel="noopener noreferrer">
-						<FormattedMessage id="page.readme_link" defaultMessage="README!"/>
-					</a>
-				</div>
+				{/*<div className="readme-link">*/}
+				{/*	<FormattedMessage id="page.here_you_can_find" defaultMessage="Here you can find: "/>*/}
+				{/*	<a href="https://github.com/zerror/five-in-a-row/blob/master/README.md" target="_blank"*/}
+				{/*		 rel="noopener noreferrer">*/}
+				{/*		<FormattedMessage id="page.readme_link" defaultMessage="README!"/>*/}
+				{/*	</a>*/}
+				{/*</div>*/}
 
 			</div>
     );
