@@ -39,7 +39,7 @@ export class Header extends React.Component {
 					</div>
 
 					<div className="mode-label">
-						<ConnectedGameOptions action={this.props.handleMode} /> <FormattedMessage id="game.mode" defaultMessage="Mode"/>: {modes[this.props.mode]}
+						<ConnectedGameOptions locale={this.props.locale} action={this.props.handleMode} /> <FormattedMessage id="game.mode" defaultMessage="Mode"/>: {modes[this.props.mode]}
 					</div>
 
 					<FormattedMessage id="button.back" defaultMessage="Back">
